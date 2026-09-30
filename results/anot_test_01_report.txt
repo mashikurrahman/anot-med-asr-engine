@@ -1,0 +1,30 @@
+============================================================
+  ANOT CLINICAL AUDIO TRANSCRIPTION REPORT (TEST 01)
+============================================================
+
+Audio Information:
+  Filename:           Recording (2).m4a
+  Extension:          .m4a
+  Format:             M4A (AAC LC) -> 16kHz mono WAV
+  File Size:          1,593,496 bytes (1.52 MB)
+  Audio Duration:     62.36 s
+  Sample Rate:        16,000 Hz
+  Channels:           1 (Mono)
+
+Model Information:
+  Model ID:           google/medasr
+  Model Architecture: LasrForCTC (105M Conformer)
+  Processor:          LasrProcessor
+  Device:             CPU (Intel Core i7-13700H)
+
+Performance & Timing:
+  Model Loading Time: 1.8427 s
+  Preprocessing Time: 0.2309 s
+  Inference Time:     3.8162 s
+  Total Time:         5.8897 s
+  RTF:                0.0612
+
+Raw MedASR Transcription Output:
+------------------------------------------------------------
+The patient is a 50-year-old male who presents with a three-week history of persistent cough and shortness of breath. He has a history of hypertension and type two diabetes mellitus. His current medications include metformin 500 mg twice daily, isupro- lisinopril 10 mg once daily and ator- atorvastatin 20 mg at bedtime. His blood pressure today is 138/84, pulse is 78 beats per minute and oxygen saturation is 97% on room air. On examinNation, The lungs are clear bilaterally with no wheezing or crackles. W will obtain a chest x-ray and complete blood count {comma} continue his current medications and followu in two weeks.</s>
+------------------------------------------------------------

@@ -1,0 +1,78 @@
+======================================================================
+  ANOT CLINICAL AUDIO TRANSCRIPTION EVALUATION (TEST 01)
+======================================================================
+
+IMPORTANT NOTICE:
+This is a preliminary development benchmark based on ONE recording.
+Do not claim clinical accuracy or clinical safety from this test.
+
+----------------------------------------------------------------------
+1. QUANTITATIVE METRICS
+----------------------------------------------------------------------
+Reference Word Count:     109
+Hypothesis Word Count:    108
+Substitutions (S):        8
+Deletions (D):            3
+Insertions (I):           2
+Total Word Errors:        13
+Standard Normalized WER:  0.1193 (11.93%)
+
+----------------------------------------------------------------------
+2. WORD-LEVEL ALIGNMENT DIFFERENCES
+----------------------------------------------------------------------
+  [SUB] Ref: "58" <---> Hyp: "50"
+  [SUB] Ref: "2" <---> Hyp: "two"
+  [SUB] Ref: "milligrams" <---> Hyp: "mg"
+  [INS] Ref: "<epsilon>" <---> Hyp: "isupro"
+  [SUB] Ref: "milligrams" <---> Hyp: "mg"
+  [INS] Ref: "<epsilon>" <---> Hyp: "ator"
+  [SUB] Ref: "milligrams" <---> Hyp: "mg"
+  [DEL] Ref: "over" <---> Hyp: "<epsilon>"
+  [DEL] Ref: "percent" <---> Hyp: "<epsilon>"
+  [SUB] Ref: "examination" <---> Hyp: "examinnation"
+  [SUB] Ref: "we" <---> Hyp: "w"
+  [DEL] Ref: "follow" <---> Hyp: "<epsilon>"
+  [SUB] Ref: "up" <---> Hyp: "followu"
+
+----------------------------------------------------------------------
+3. MEDICAL-SPECIFIC EVALUATION BREAKDOWN
+----------------------------------------------------------------------
+A. Medication Name Accuracy:
+   - Metformin:    Correctly recognized ('metformin')
+   - Lisinopril:   Correctly recognized ('lisinopril'), preceded by acoustic false start 'isupro-'
+   - Atorvastatin: Correctly recognized ('atorvastatin'), preceded by acoustic stutter 'ator-'
+
+B. Medication Dosage Accuracy:
+   - 500 milligrams: Transcribed as '500 mg' (Accurate clinical abbreviation; counts as mismatch under strict WER)
+   - 10 milligrams:  Transcribed as '10 mg' (Accurate clinical abbreviation)
+   - 20 milligrams:  Transcribed as '20 mg' (Accurate clinical abbreviation)
+
+C. Medication Frequency Accuracy:
+   - Twice daily:   100% accurate ('twice daily')
+   - Once daily:    100% accurate ('once daily')
+   - At bedtime:    100% accurate ('at bedtime')
+
+D. Number & Vital Signs Accuracy:
+   - Age (58 vs 50): ERROR: Patient age transcribed as '50' instead of '58'
+   - Duration (three-week): 100% accurate ('three week')
+   - Blood pressure (138/84): Accurate clinical representation ('138/84' vs '138 over 84')
+   - Pulse (78 beats per minute): 100% accurate ('78 beats per minute')
+   - Oxygen Saturation (97%): Accurate clinical representation ('97%' vs '97 percent')
+   - Type 2 diabetes: Accurately captured as 'type two diabetes mellitus'
+
+E. Medical Terminology Accuracy:
+   - 'hypertension':                     100% accurate
+   - 'type 2 diabetes mellitus':         100% accurate
+   - 'shortness of breath':              100% accurate
+   - 'persistent cough':                 100% accurate
+   - 'bilaterally':                      100% accurate
+   - 'wheezing':                         100% accurate
+   - 'crackles':                         100% accurate
+   - 'chest x-ray':                      100% accurate
+   - 'complete blood count':             100% accurate
+   - Minor spelling/casing artifacts:    'examinNation' (capitalization glitch in CTC), 'W will' ('We will'), 'followu' ('follow up')
+
+F. Potentially Clinically Significant Errors:
+   1. PATIENT AGE: '58-year-old' transcribed as '50-year-old'. Discrepancy in patient demographic record.
+   2. ACOUSTIC DISFLUENCIES: Captured 'isupro- lisinopril' and 'ator- atorvastatin'. Reflects verbatim natural speech disfluency rather than hallucinated medication.
+   3. PLAN ACTION: 'followu' instead of 'follow up in two weeks'.

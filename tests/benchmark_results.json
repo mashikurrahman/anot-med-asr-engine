@@ -1,0 +1,24 @@
+{
+  "audio_duration_sec": 43.8,
+  "cpu": {
+    "device": "cpu",
+    "model_load_sec": 1.9671198999858461,
+    "prep_sec": 0.3344643000164069,
+    "inference_sec": 2.8063565000193194,
+    "total_sec": 5.107940700021572,
+    "rtf": 0.06407206621048675,
+    "transcription": "[EXAM TYPE] CT chest PE protocol {period} [INDICATION] 54-year-old female, shortness of breath, evaluate for PE {period} [TECHNIQUE] Standard protocol {period} [FINDINGS] {colon} Pulmonary vasculature {colon} The main PA is patent {period} There are filling defects in the segmental branches of the right lower lobe {comma} compatible with acute PE {period} No saddle embolus {period} Lungs {colon} No pneumothorax {period} Small bilateral effusions {comma} right greater than left {period} {new paragraph} [IMPRESSION] {colon} Acute segmental PE, right lower lobe {period}</s>"
+  },
+  "xpu": {
+    "device": "xpu:0",
+    "gpu_name": "Intel(R) Arc(TM) A370M Graphics",
+    "model_load_sec": 1.7699903000029735,
+    "prep_sec": 0.14148399996338412,
+    "inference_sec": 8.736220100021455,
+    "total_sec": 10.647694399987813,
+    "rtf": 0.19945707990916567,
+    "transcription": "[EXAM TYPE] CT chest PE protocol {period} [INDICATION] 54-year-old female, shortness of breath, evaluate for PE {period} [TECHNIQUE] Standard protocol {period} [FINDINGS] {colon} Pulmonary vasculature {colon} The main PA is patent {period} There are filling defects in the segmental branches of the right lower lobe {comma} compatible with acute PE {period} No saddle embolus {period} Lungs {colon} No pneumothorax {period} Small bilateral effusions {comma} right greater than left {period} {new paragraph} [IMPRESSION] {colon} Acute segmental PE, right lower lobe {period}</s>"
+  },
+  "identical": true,
+  "speedup": 0.3212323485316524
+}

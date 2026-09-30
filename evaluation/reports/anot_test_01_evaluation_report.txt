@@ -1,0 +1,147 @@
+==============================================================================
+        ANOT HEALTH — MEDICAL ASR TRANSCRIPT EVALUATION REPORT
+==============================================================================
+
+IMPORTANT DISCLAIMER:
+This evaluation report contains separate, objective clinical metrics for development
+benchmarking. It does NOT compute a single aggregate 'accuracy score'. This test
+does NOT constitute clinical certification or validation of safety.
+
+------------------------------------------------------------------------------
+1. GENERAL ASR METRICS (Word Error Rate & Edit Counts)
+------------------------------------------------------------------------------
+  Reference Word Count:     109
+  Hypothesis Word Count:    108
+  Substitutions (S):        7
+  Deletions (D):            3
+  Insertions (I):           2
+  Total Word Errors (S+D+I):12
+  Word Error Rate (WER):    0.1101 (11.01%)
+
+------------------------------------------------------------------------------
+2. WORD-LEVEL ALIGNMENT DIFFERENCES
+------------------------------------------------------------------------------
+  [SUB] Ref: "58"  <--->  Hyp: "50"
+  [SUB] Ref: "milligrams"  <--->  Hyp: "mg"
+  [INS] Ref: "<epsilon>"  <--->  Hyp: "isupro"
+  [SUB] Ref: "milligrams"  <--->  Hyp: "mg"
+  [INS] Ref: "<epsilon>"  <--->  Hyp: "ator"
+  [SUB] Ref: "milligrams"  <--->  Hyp: "mg"
+  [DEL] Ref: "over"  <--->  Hyp: "<epsilon>"
+  [DEL] Ref: "percent"  <--->  Hyp: "<epsilon>"
+  [SUB] Ref: "examination"  <--->  Hyp: "examinnation"
+  [SUB] Ref: "we"  <--->  Hyp: "w"
+  [DEL] Ref: "follow"  <--->  Hyp: "<epsilon>"
+  [SUB] Ref: "up"  <--->  Hyp: "followu"
+
+------------------------------------------------------------------------------
+3. MEDICAL TERMINOLOGY COMPARISON
+------------------------------------------------------------------------------
+  [Diagnoses]
+    Matches (2):    hypertension, type 2 diabetes mellitus
+    Omissions (0):  None
+    Additions (0):  None
+  [Symptoms]
+    Matches (4):    crackles, persistent cough, shortness of breath, wheezing
+    Omissions (0):  None
+    Additions (0):  None
+  [Procedures]
+    Matches (1):    chest x-ray
+    Omissions (0):  None
+    Additions (0):  None
+  [Anatomy]
+    Matches (3):    bilaterally, chest, lungs
+    Omissions (0):  None
+    Additions (0):  None
+  [Laboratory Tests]
+    Matches (1):    complete blood count
+    Omissions (0):  None
+    Additions (0):  None
+  [Vital Signs]
+    Matches (3):    blood pressure, oxygen saturation, pulse
+    Omissions (0):  None
+    Additions (0):  None
+
+------------------------------------------------------------------------------
+4. MEDICATION COMPARISON
+------------------------------------------------------------------------------
+  Matched Medications (3):
+    - Metformin
+    - Lisinopril (Acoustic false-start prefix: 'isupro-')
+    - Atorvastatin (Acoustic false-start prefix: 'ator-')
+
+------------------------------------------------------------------------------
+5. DOSAGE COMPARISON & UNIT EQUIVALENCE
+------------------------------------------------------------------------------
+  Equivalent Dosage Notations (Normalized equivalent units, NOT an error):
+    - Metformin: Ref: '500 milligrams' <---> Hyp: '500 mg'
+      Normalized Standard: 500 mg [Equivalent dosage unit ('milligrams' == 'mg'). NOT a dosage error.]
+    - Lisinopril: Ref: '10 milligrams' <---> Hyp: '10 mg'
+      Normalized Standard: 10 mg [Equivalent dosage unit ('milligrams' == 'mg'). NOT a dosage error.]
+    - Atorvastatin: Ref: '20 milligrams' <---> Hyp: '20 mg'
+      Normalized Standard: 20 mg [Equivalent dosage unit ('milligrams' == 'mg'). NOT a dosage error.]
+
+------------------------------------------------------------------------------
+6. FREQUENCY COMPARISON
+------------------------------------------------------------------------------
+  All detected medication dosing frequencies matched the reference:
+    - Metformin: 'twice daily' matched 'twice daily'
+    - Lisinopril: 'once daily' matched 'once daily'
+    - Atorvastatin: 'at bedtime' matched 'at bedtime'
+
+------------------------------------------------------------------------------
+7. CRITICAL NUMERIC COMPARISON
+------------------------------------------------------------------------------
+  CRITICAL NUMERIC MISMATCHES:
+    [!] Category:       patient_age
+        Reference:      58 (raw: "a 58-year-old")
+        Hypothesis:     50 (raw: "a 50-year-old")
+  Equivalent Numeric Notations (Clinically identical values):
+    - blood_pressure: Ref "138 over 84" <---> Hyp "138/84" (Value: 138/84)
+    - oxygen_saturation: Ref "oxygen saturation is 97 percent" <---> Hyp "oxygen saturation is 97%" (Value: 97)
+  Identical Numeric Matches:
+    - clinical_duration: 3 ("three-week")
+    - clinical_duration: 2 ("two weeks")
+    - pulse: 78 ("pulse is 78 beats per minute")
+
+------------------------------------------------------------------------------
+8. POTENTIALLY CLINICALLY SIGNIFICANT MISMATCHES
+------------------------------------------------------------------------------
+  1. [HIGH] Patient Age Discrepancy
+     Category:    patient_demographics
+     Description: Age transcribed as 50 instead of 58 (a 50-year-old vs a 58-year-old). Risk of patient record demographic mismatch.
+
+------------------------------------------------------------------------------
+9. FALSE-START / STUTTER ARTIFACTS
+------------------------------------------------------------------------------
+  Detected Acoustic Disfluencies (2):
+    - Artifact: "isupro- lisinopril" (prefix 'isupro-' before 'lisinopril')
+      Classification: abandoned_false_start
+      Handling: Preserved in raw transcript; recognized as acoustic disfluency rather than drug hallucination.
+    - Artifact: "ator- atorvastatin" (prefix 'ator-' before 'atorvastatin')
+      Classification: stutter_repetition
+      Handling: Preserved in raw transcript; recognized as acoustic disfluency rather than drug hallucination.
+
+------------------------------------------------------------------------------
+10. OVERALL RAW HYPOTHESIS TRANSCRIPT
+------------------------------------------------------------------------------
+The patient is a 50-year-old male who presents with a three-week history of persistent cough and shortness of breath. He has a history of hypertension and type two diabetes mellitus. His current medications include metformin 500 mg twice daily, isupro- lisinopril 10 mg once daily and ator- atorvastatin 20 mg at bedtime. His blood pressure today is 138/84, pulse is 78 beats per minute and oxygen saturation is 97% on room air. On examinNation, The lungs are clear bilaterally with no wheezing or crackles. W will obtain a chest x-ray and complete blood count {comma} continue his current medications and followu in two weeks.</s>
+
+------------------------------------------------------------------------------
+11. OVERALL REFERENCE TRANSCRIPT
+------------------------------------------------------------------------------
+The patient is a 58-year-old male who presents with a three-week history of persistent cough and shortness of breath.
+
+He has a history of hypertension and type 2 diabetes mellitus.
+
+His current medications include metformin 500 milligrams twice daily, lisinopril 10 milligrams once daily, and atorvastatin 20 milligrams at bedtime.
+
+His blood pressure today is 138 over 84, pulse is 78 beats per minute, and oxygen saturation is 97 percent on room air.
+
+On examination, the lungs are clear bilaterally with no wheezing or crackles.
+
+We will obtain a chest x-ray and complete blood count. Continue his current medications and follow up in two weeks.
+
+==============================================================================
+                          END OF EVALUATION REPORT
+==============================================================================

@@ -1,0 +1,817 @@
+{
+  "wer_metrics": {
+    "reference_word_count": 109,
+    "hypothesis_word_count": 108,
+    "substitutions": 7,
+    "deletions": 3,
+    "insertions": 2,
+    "total_errors": 12,
+    "wer": 0.11009174311926606,
+    "alignment": [
+      [
+        "OK",
+        "the",
+        "the"
+      ],
+      [
+        "OK",
+        "patient",
+        "patient"
+      ],
+      [
+        "OK",
+        "is",
+        "is"
+      ],
+      [
+        "OK",
+        "a",
+        "a"
+      ],
+      [
+        "SUB",
+        "58",
+        "50"
+      ],
+      [
+        "OK",
+        "year",
+        "year"
+      ],
+      [
+        "OK",
+        "old",
+        "old"
+      ],
+      [
+        "OK",
+        "male",
+        "male"
+      ],
+      [
+        "OK",
+        "who",
+        "who"
+      ],
+      [
+        "OK",
+        "presents",
+        "presents"
+      ],
+      [
+        "OK",
+        "with",
+        "with"
+      ],
+      [
+        "OK",
+        "a",
+        "a"
+      ],
+      [
+        "OK",
+        "3",
+        "3"
+      ],
+      [
+        "OK",
+        "week",
+        "week"
+      ],
+      [
+        "OK",
+        "history",
+        "history"
+      ],
+      [
+        "OK",
+        "of",
+        "of"
+      ],
+      [
+        "OK",
+        "persistent",
+        "persistent"
+      ],
+      [
+        "OK",
+        "cough",
+        "cough"
+      ],
+      [
+        "OK",
+        "and",
+        "and"
+      ],
+      [
+        "OK",
+        "shortness",
+        "shortness"
+      ],
+      [
+        "OK",
+        "of",
+        "of"
+      ],
+      [
+        "OK",
+        "breath",
+        "breath"
+      ],
+      [
+        "OK",
+        "he",
+        "he"
+      ],
+      [
+        "OK",
+        "has",
+        "has"
+      ],
+      [
+        "OK",
+        "a",
+        "a"
+      ],
+      [
+        "OK",
+        "history",
+        "history"
+      ],
+      [
+        "OK",
+        "of",
+        "of"
+      ],
+      [
+        "OK",
+        "hypertension",
+        "hypertension"
+      ],
+      [
+        "OK",
+        "and",
+        "and"
+      ],
+      [
+        "OK",
+        "type",
+        "type"
+      ],
+      [
+        "OK",
+        "2",
+        "2"
+      ],
+      [
+        "OK",
+        "diabetes",
+        "diabetes"
+      ],
+      [
+        "OK",
+        "mellitus",
+        "mellitus"
+      ],
+      [
+        "OK",
+        "his",
+        "his"
+      ],
+      [
+        "OK",
+        "current",
+        "current"
+      ],
+      [
+        "OK",
+        "medications",
+        "medications"
+      ],
+      [
+        "OK",
+        "include",
+        "include"
+      ],
+      [
+        "OK",
+        "metformin",
+        "metformin"
+      ],
+      [
+        "OK",
+        "500",
+        "500"
+      ],
+      [
+        "SUB",
+        "milligrams",
+        "mg"
+      ],
+      [
+        "OK",
+        "twice",
+        "twice"
+      ],
+      [
+        "OK",
+        "daily",
+        "daily"
+      ],
+      [
+        "INS",
+        "<epsilon>",
+        "isupro"
+      ],
+      [
+        "OK",
+        "lisinopril",
+        "lisinopril"
+      ],
+      [
+        "OK",
+        "10",
+        "10"
+      ],
+      [
+        "SUB",
+        "milligrams",
+        "mg"
+      ],
+      [
+        "OK",
+        "once",
+        "once"
+      ],
+      [
+        "OK",
+        "daily",
+        "daily"
+      ],
+      [
+        "OK",
+        "and",
+        "and"
+      ],
+      [
+        "INS",
+        "<epsilon>",
+        "ator"
+      ],
+      [
+        "OK",
+        "atorvastatin",
+        "atorvastatin"
+      ],
+      [
+        "OK",
+        "20",
+        "20"
+      ],
+      [
+        "SUB",
+        "milligrams",
+        "mg"
+      ],
+      [
+        "OK",
+        "at",
+        "at"
+      ],
+      [
+        "OK",
+        "bedtime",
+        "bedtime"
+      ],
+      [
+        "OK",
+        "his",
+        "his"
+      ],
+      [
+        "OK",
+        "blood",
+        "blood"
+      ],
+      [
+        "OK",
+        "pressure",
+        "pressure"
+      ],
+      [
+        "OK",
+        "today",
+        "today"
+      ],
+      [
+        "OK",
+        "is",
+        "is"
+      ],
+      [
+        "OK",
+        "138",
+        "138"
+      ],
+      [
+        "DEL",
+        "over",
+        "<epsilon>"
+      ],
+      [
+        "OK",
+        "84",
+        "84"
+      ],
+      [
+        "OK",
+        "pulse",
+        "pulse"
+      ],
+      [
+        "OK",
+        "is",
+        "is"
+      ],
+      [
+        "OK",
+        "78",
+        "78"
+      ],
+      [
+        "OK",
+        "beats",
+        "beats"
+      ],
+      [
+        "OK",
+        "per",
+        "per"
+      ],
+      [
+        "OK",
+        "minute",
+        "minute"
+      ],
+      [
+        "OK",
+        "and",
+        "and"
+      ],
+      [
+        "OK",
+        "oxygen",
+        "oxygen"
+      ],
+      [
+        "OK",
+        "saturation",
+        "saturation"
+      ],
+      [
+        "OK",
+        "is",
+        "is"
+      ],
+      [
+        "OK",
+        "97",
+        "97"
+      ],
+      [
+        "DEL",
+        "percent",
+        "<epsilon>"
+      ],
+      [
+        "OK",
+        "on",
+        "on"
+      ],
+      [
+        "OK",
+        "room",
+        "room"
+      ],
+      [
+        "OK",
+        "air",
+        "air"
+      ],
+      [
+        "OK",
+        "on",
+        "on"
+      ],
+      [
+        "SUB",
+        "examination",
+        "examinnation"
+      ],
+      [
+        "OK",
+        "the",
+        "the"
+      ],
+      [
+        "OK",
+        "lungs",
+        "lungs"
+      ],
+      [
+        "OK",
+        "are",
+        "are"
+      ],
+      [
+        "OK",
+        "clear",
+        "clear"
+      ],
+      [
+        "OK",
+        "bilaterally",
+        "bilaterally"
+      ],
+      [
+        "OK",
+        "with",
+        "with"
+      ],
+      [
+        "OK",
+        "no",
+        "no"
+      ],
+      [
+        "OK",
+        "wheezing",
+        "wheezing"
+      ],
+      [
+        "OK",
+        "or",
+        "or"
+      ],
+      [
+        "OK",
+        "crackles",
+        "crackles"
+      ],
+      [
+        "SUB",
+        "we",
+        "w"
+      ],
+      [
+        "OK",
+        "will",
+        "will"
+      ],
+      [
+        "OK",
+        "obtain",
+        "obtain"
+      ],
+      [
+        "OK",
+        "a",
+        "a"
+      ],
+      [
+        "OK",
+        "chest",
+        "chest"
+      ],
+      [
+        "OK",
+        "x",
+        "x"
+      ],
+      [
+        "OK",
+        "ray",
+        "ray"
+      ],
+      [
+        "OK",
+        "and",
+        "and"
+      ],
+      [
+        "OK",
+        "complete",
+        "complete"
+      ],
+      [
+        "OK",
+        "blood",
+        "blood"
+      ],
+      [
+        "OK",
+        "count",
+        "count"
+      ],
+      [
+        "OK",
+        "continue",
+        "continue"
+      ],
+      [
+        "OK",
+        "his",
+        "his"
+      ],
+      [
+        "OK",
+        "current",
+        "current"
+      ],
+      [
+        "OK",
+        "medications",
+        "medications"
+      ],
+      [
+        "OK",
+        "and",
+        "and"
+      ],
+      [
+        "DEL",
+        "follow",
+        "<epsilon>"
+      ],
+      [
+        "SUB",
+        "up",
+        "followu"
+      ],
+      [
+        "OK",
+        "in",
+        "in"
+      ],
+      [
+        "OK",
+        "2",
+        "2"
+      ],
+      [
+        "OK",
+        "weeks",
+        "weeks"
+      ]
+    ],
+    "reference_normalized": "the patient is a 58 year old male who presents with a 3 week history of persistent cough and shortness of breath he has a history of hypertension and type 2 diabetes mellitus his current medications include metformin 500 milligrams twice daily lisinopril 10 milligrams once daily and atorvastatin 20 milligrams at bedtime his blood pressure today is 138 over 84 pulse is 78 beats per minute and oxygen saturation is 97 percent on room air on examination the lungs are clear bilaterally with no wheezing or crackles we will obtain a chest x ray and complete blood count continue his current medications and follow up in 2 weeks",
+    "hypothesis_normalized": "the patient is a 50 year old male who presents with a 3 week history of persistent cough and shortness of breath he has a history of hypertension and type 2 diabetes mellitus his current medications include metformin 500 mg twice daily isupro lisinopril 10 mg once daily and ator atorvastatin 20 mg at bedtime his blood pressure today is 138 84 pulse is 78 beats per minute and oxygen saturation is 97 on room air on examinnation the lungs are clear bilaterally with no wheezing or crackles w will obtain a chest x ray and complete blood count continue his current medications and followu in 2 weeks"
+  },
+  "false_starts": [
+    {
+      "matched_text": "isupro- lisinopril",
+      "prefix": "isupro-",
+      "target_word": "lisinopril",
+      "category": "abandoned_false_start",
+      "span": [
+        245,
+        263
+      ]
+    },
+    {
+      "matched_text": "ator- atorvastatin",
+      "prefix": "ator-",
+      "target_word": "atorvastatin",
+      "category": "stutter_repetition",
+      "span": [
+        285,
+        303
+      ]
+    }
+  ],
+  "numeric_comparison": {
+    "matches": [
+      {
+        "category": "clinical_duration",
+        "value": "3",
+        "raw_text": "three-week"
+      },
+      {
+        "category": "clinical_duration",
+        "value": "2",
+        "raw_text": "two weeks"
+      },
+      {
+        "category": "pulse",
+        "value": "78",
+        "raw_text": "pulse is 78 beats per minute"
+      }
+    ],
+    "equivalent_notations": [
+      {
+        "category": "blood_pressure",
+        "reference_raw": "138 over 84",
+        "hypothesis_raw": "138/84",
+        "normalized_value": "138/84"
+      },
+      {
+        "category": "oxygen_saturation",
+        "reference_raw": "oxygen saturation is 97 percent",
+        "hypothesis_raw": "oxygen saturation is 97%",
+        "normalized_value": "97"
+      }
+    ],
+    "critical_mismatches": [
+      {
+        "category": "patient_age",
+        "reference": "58",
+        "hypothesis": "50",
+        "reference_raw": "a 58-year-old",
+        "hypothesis_raw": "a 50-year-old"
+      }
+    ],
+    "reference_only": [],
+    "hypothesis_only": []
+  },
+  "medication_comparison": {
+    "matched_regimens": [
+      {
+        "drug_name": "metformin",
+        "reference": {
+          "drug_name": "metformin",
+          "dosage_value": "500",
+          "dosage_unit_raw": "milligrams",
+          "dosage_unit_normalized": "mg",
+          "frequency_raw": "twice daily",
+          "frequency_normalized": "twice daily",
+          "preceding_false_start": null,
+          "span": [
+            215,
+            224
+          ]
+        },
+        "hypothesis": {
+          "drug_name": "metformin",
+          "dosage_value": "500",
+          "dosage_unit_raw": "mg",
+          "dosage_unit_normalized": "mg",
+          "frequency_raw": "twice daily",
+          "frequency_normalized": "twice daily",
+          "preceding_false_start": null,
+          "span": [
+            215,
+            224
+          ]
+        },
+        "false_start_detected": null
+      },
+      {
+        "drug_name": "lisinopril",
+        "reference": {
+          "drug_name": "lisinopril",
+          "dosage_value": "10",
+          "dosage_unit_raw": "milligrams",
+          "dosage_unit_normalized": "mg",
+          "frequency_raw": "once daily",
+          "frequency_normalized": "once daily",
+          "preceding_false_start": null,
+          "span": [
+            253,
+            263
+          ]
+        },
+        "hypothesis": {
+          "drug_name": "lisinopril",
+          "dosage_value": "10",
+          "dosage_unit_raw": "mg",
+          "dosage_unit_normalized": "mg",
+          "frequency_raw": "once daily",
+          "frequency_normalized": "once daily",
+          "preceding_false_start": "isupro-",
+          "span": [
+            253,
+            263
+          ]
+        },
+        "false_start_detected": "isupro-"
+      },
+      {
+        "drug_name": "atorvastatin",
+        "reference": {
+          "drug_name": "atorvastatin",
+          "dosage_value": "20",
+          "dosage_unit_raw": "milligrams",
+          "dosage_unit_normalized": "mg",
+          "frequency_raw": "at bedtime",
+          "frequency_normalized": "at bedtime",
+          "preceding_false_start": null,
+          "span": [
+            294,
+            306
+          ]
+        },
+        "hypothesis": {
+          "drug_name": "atorvastatin",
+          "dosage_value": "20",
+          "dosage_unit_raw": "mg",
+          "dosage_unit_normalized": "mg",
+          "frequency_raw": "at bedtime",
+          "frequency_normalized": "at bedtime",
+          "preceding_false_start": "ator-",
+          "span": [
+            291,
+            303
+          ]
+        },
+        "false_start_detected": "ator-"
+      }
+    ],
+    "equivalent_dosage_units": [
+      {
+        "drug_name": "metformin",
+        "reference": "500 milligrams",
+        "hypothesis": "500 mg",
+        "normalized": "500 mg",
+        "note": "Equivalent dosage unit ('milligrams' == 'mg'). NOT a dosage error."
+      },
+      {
+        "drug_name": "lisinopril",
+        "reference": "10 milligrams",
+        "hypothesis": "10 mg",
+        "normalized": "10 mg",
+        "note": "Equivalent dosage unit ('milligrams' == 'mg'). NOT a dosage error."
+      },
+      {
+        "drug_name": "atorvastatin",
+        "reference": "20 milligrams",
+        "hypothesis": "20 mg",
+        "normalized": "20 mg",
+        "note": "Equivalent dosage unit ('milligrams' == 'mg'). NOT a dosage error."
+      }
+    ],
+    "dosage_mismatches": [],
+    "frequency_mismatches": [],
+    "omitted_medications": [],
+    "added_medications": []
+  },
+  "terminology_comparison": {
+    "diagnoses": {
+      "matches": [
+        "hypertension",
+        "type 2 diabetes mellitus"
+      ],
+      "omissions": [],
+      "additions": []
+    },
+    "symptoms": {
+      "matches": [
+        "crackles",
+        "persistent cough",
+        "shortness of breath",
+        "wheezing"
+      ],
+      "omissions": [],
+      "additions": []
+    },
+    "procedures": {
+      "matches": [
+        "chest x-ray"
+      ],
+      "omissions": [],
+      "additions": []
+    },
+    "anatomy": {
+      "matches": [
+        "bilaterally",
+        "chest",
+        "lungs"
+      ],
+      "omissions": [],
+      "additions": []
+    },
+    "laboratory_tests": {
+      "matches": [
+        "complete blood count"
+      ],
+      "omissions": [],
+      "additions": []
+    },
+    "vital_signs": {
+      "matches": [
+        "blood pressure",
+        "oxygen saturation",
+        "pulse"
+      ],
+      "omissions": [],
+      "additions": []
+    }
+  },
+  "clinical_significance": [
+    {
+      "severity": "HIGH",
+      "category": "patient_demographics",
+      "title": "Patient Age Discrepancy",
+      "description": "Age transcribed as 50 instead of 58 (a 50-year-old vs a 58-year-old). Risk of patient record demographic mismatch."
+    }
+  ]
+}
