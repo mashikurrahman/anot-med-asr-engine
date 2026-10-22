@@ -1,0 +1,28 @@
+services:
+  anot-asr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anot-medical-asr
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - ANOT_ASR_ENV=production
+      - ANOT_ASR_HOST=0.0.0.0
+      - ANOT_ASR_PORT=8000
+      - ANOT_ASR_DEVICE=cpu
+      - ANOT_ASR_MODE_DEFAULT=dictation
+      - ANOT_ASR_DECODER_DEFAULT=greedy
+      - ANOT_ASR_MAX_UPLOAD_MB=100
+      - ANOT_ASR_MAX_DURATION_SECONDS=1800
+      - ANOT_ASR_MAX_CONCURRENT_JOBS=2
+    volumes:
+      # Mount HuggingFace cache to persist pre-downloaded MedASR model
+      - ~/.cache/huggingface:/root/.cache/huggingface:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s

@@ -13,6 +13,29 @@ Anot Medical ASR enables on-device medical dictation and transcription without s
 
 ---
 
+## ASR Engines
+
+The service supports two interchangeable local engines (select per-request via the
+`engine` form field, or globally via `ANOT_ASR_ENGINE`):
+
+| Engine | Best for | Measured clinical accuracy | Notes |
+|---|---|---|---|
+| **`whisper`** (Whisper large-v3) | **Patient-visit conversations** | ~97–98% | **Recommended** for recorded visits; robust to spontaneous, multi-speaker, ambient audio. Local batch via faster-whisper. |
+| `medasr` (Google MedASR) | Clean doctor dictation | ~92–96% | Fast CTC dictation model; weak on conversational audio. Repo default so tests run offline. |
+
+For production (patient visits), set `ANOT_ASR_ENGINE=whisper` (see `.env.example`).
+The deterministic clinical normalization and evaluation layers are engine-agnostic
+and apply to both. Pipeline for the recommended setup:
+
+```
+visit recording → Whisper large-v3 → clinical normalization → (your SOAP LLM step)
+```
+
+See `docs/anot_accuracy_roadmap_to_99.md` and `benchmark/stage21_whisper_eval/`
+for the head-to-head benchmark behind this recommendation.
+
+---
+
 ## Hardware & Environment Specifications
 
 - **OS**: Windows 11

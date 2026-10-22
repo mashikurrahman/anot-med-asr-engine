@@ -46,3 +46,71 @@ $RECYCLE.BIN/
 # Temporary files & logs
 *.log
 *.tmp
+temp/
+
+# PHI-derived language-model artifacts (trained from local clinical notes)
+language_model/models/
+language_model/corpus/
+
+# Real-world clinical recordings & PHI-bearing outputs (Anot Health Privacy Rules)
+# The entire real-recording research tree is PHI-derived — never commit it.
+real benchmark/
+# PHI-bearing transcripts/outputs produced by benchmark + diagnostic stages
+# (real doctor-patient pilots). Keep the CODE, exclude the DATA.
+benchmark/**/transcripts/
+benchmark/**/*transcript*.txt
+benchmark/**/*_raw.txt
+benchmark/**/*PHI*
+benchmark/stage18*/**/*.txt
+benchmark/stage18*/**/*.csv
+benchmark/stage18*/**/*.json
+diagnostic/**/*transcript*
+diagnostic/**/*raw*
+
+# PHI-derived / local-only evaluation + results artifacts
+results/audio_cache/
+results/analysis/
+results/benchmark/
+benchmark/stage20_accuracy_measurement/results_*.json
+benchmark/stage23_label_free_eval/proxy_results.json
+
+# Scratch / experimental working dirs (never deployed)
+scratch/
+temp/
+
+# Benchmark/diagnostic DATA derived from real recordings (PHI). The service does
+# not need these to run; exclude the data trees wholesale to avoid any leak.
+# (Synthetic Stage 12 audio/references are safe and kept.)
+benchmark/conversation_robustness/
+benchmark/stage13_frontend/**/data/
+benchmark/stage14_reference_preparation/
+benchmark/stage15_annotation_pilot/
+benchmark/stage16_governance_readiness/
+benchmark/stage17_source_integrity/
+benchmark/stage18a_audio_inventory/
+benchmark/stage18b_cohort_governance/
+benchmark/stage18c_clinical_pilot_preparation/
+benchmark/stage18c_correction_audit/
+benchmark/stage18d_human_annotation_pilot/
+benchmark/stage18e_existing_review_reconciliation/
+benchmark/stage18f_local_transcription_workspace/data/
+benchmark/stage18g_asr_quality_diagnosis/transcripts/
+benchmark/stage18h_acoustic_aware_chunking/
+benchmark/stage18i_segmentation_ui_integration/
+dataset/
+diagnostic/
+analysis/
+
+# --- Engine deploy repo: exclude the entire research/dev trees ---
+# These are PHI-entangled or dev-only and NOT needed to run the service. The
+# deployable engine = app/ audio/ decoding/ language_model/ evaluation/*.py +
+# medical_entities.json + accuracy/ + tests (engine) + Docker/env config.
+benchmark/
+docs/
+# Benchmark/stage-specific tests depend on the excluded research trees.
+tests/test_stage*.py
+tests/test_benchmark_*.py
+tests/test_dataset_inventory.py
+tests/test_conversation_diagnostic.py
+tests/test_clinical_encounter.py
+tests/test_real_benchmark.py

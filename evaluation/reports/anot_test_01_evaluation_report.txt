@@ -19,6 +19,24 @@ does NOT constitute clinical certification or validation of safety.
   Word Error Rate (WER):    0.1101 (11.01%)
 
 ------------------------------------------------------------------------------
+1B. CLINICALLY-NORMALIZED ASR METRICS (unit/vital/disfluency-equivalent)
+------------------------------------------------------------------------------
+  Applies the SAME deterministic clinical normalization to reference and
+  hypothesis so clinically-identical surface forms (500 milligrams == 500 mg,
+  138 over 84 == 138/84, 97 percent == 97%) and the speaker's own abandoned
+  false-starts are not counted as recognition errors. Clinical VALUES must
+  still match exactly; this never masks a changed number, drug, or dose.
+
+  Reference Word Count:     103
+  Hypothesis Word Count:    102
+  Substitutions (S):        4
+  Deletions (D):            1
+  Insertions (I):           0
+  Total Word Errors (S+D+I):5
+  Clinically-Normalized WER:0.0485 (4.85%)
+  Clinically-Normalized Acc:95.15%
+
+------------------------------------------------------------------------------
 2. WORD-LEVEL ALIGNMENT DIFFERENCES
 ------------------------------------------------------------------------------
   [SUB] Ref: "58"  <--->  Hyp: "50"

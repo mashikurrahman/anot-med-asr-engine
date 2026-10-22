@@ -1,0 +1,80 @@
+{
+  "_disclaimer": "Multilingual medical vocabulary / phrase library for ASR biasing (Whisper hotwords + prompt). Starter set — extend per clinic/region. Not clinical advice.",
+  "_usage": "phrase_library.py builds a capped, prioritized hotword string and a short initial prompt per language. Lay patient expressions are included so the engine transcribes how patients actually speak.",
+  "en": {
+    "symptoms_clinical": [
+      "shortness of breath", "dyspnea", "chest pain", "palpitations", "dizziness",
+      "nausea", "vomiting", "diarrhea", "constipation", "abdominal pain",
+      "fever", "chills", "fatigue", "cough", "wheezing", "congestion",
+      "sore throat", "runny nose", "nasal congestion", "headache", "migraine",
+      "rash", "itching", "swelling", "edema", "numbness", "tingling",
+      "blurred vision", "ringing in the ears", "tinnitus", "heartburn",
+      "shortness of breath on exertion", "night sweats", "weight loss",
+      "loss of appetite", "joint pain", "back pain", "muscle aches"
+    ],
+    "symptoms_lay": [
+      "can't catch my breath", "out of breath", "winded", "tight chest",
+      "throwing up", "feel sick to my stomach", "upset stomach", "the runs",
+      "stuffy nose", "blocked nose", "scratchy throat", "pins and needles",
+      "lightheaded", "woozy", "worn out", "run down", "stomach bug",
+      "head cold", "chesty cough", "dry cough", "bunged up", "tummy ache",
+      "my heart is racing", "pounding heart", "spinning", "queasy"
+    ],
+    "conditions": [
+      "hypertension", "high blood pressure", "diabetes", "type 2 diabetes",
+      "asthma", "COPD", "pneumonia", "bronchitis", "sinusitis", "allergic rhinitis",
+      "allergies", "eczema", "GERD", "acid reflux", "hypothyroidism",
+      "anxiety", "depression", "migraine", "arthritis", "osteoarthritis",
+      "atrial fibrillation", "coronary artery disease", "heart failure",
+      "chronic kidney disease", "anemia", "hyperlipidemia", "urinary tract infection"
+    ],
+    "medications": [
+      "amoxicillin", "augmentin", "azithromycin", "prednisone", "prednisolone",
+      "albuterol", "ventolin", "salbutamol", "fluticasone", "flonase",
+      "montelukast", "singulair", "cetirizine", "zyrtec", "loratadine", "claritin",
+      "fexofenadine", "allegra", "diphenhydramine", "benadryl", "pseudoephedrine",
+      "sudafed", "guaifenesin", "mucinex", "ibuprofen", "acetaminophen",
+      "paracetamol", "metformin", "lisinopril", "amlodipine", "atorvastatin",
+      "omeprazole", "levothyroxine", "insulin", "symbicort", "advair", "spiriva",
+      "dupixent", "xolair", "nasonex", "mometasone"
+    ],
+    "anatomy": [
+      "lungs", "chest", "throat", "sinuses", "nose", "ears", "abdomen",
+      "stomach", "heart", "airway", "bronchial tubes", "nasal passages"
+    ],
+    "procedures": [
+      "chest x-ray", "spirometry", "pulmonary function test", "allergy testing",
+      "skin prick test", "nasal endoscopy", "CT scan", "blood test",
+      "complete blood count", "throat swab", "strep test", "COVID test",
+      "nasal spray", "nebulizer", "inhaler"
+    ],
+    "spelling_variants_uk": {
+      "edema": "oedema", "diarrhea": "diarrhoea", "anemia": "anaemia",
+      "hemoglobin": "haemoglobin", "esophagus": "oesophagus",
+      "acetaminophen": "paracetamol", "albuterol": "salbutamol",
+      "epinephrine": "adrenaline", "pediatric": "paediatric",
+      "fetal": "foetal", "orthopedic": "orthopaedic"
+    }
+  },
+  "bn": {
+    "_note": "Bangladeshi medical consults commonly code-switch: Bangla sentences with English medical/drug terms. Whisper accuracy on Bengali is moderate and biasing in Bengali script is limited — treat as best-effort pending Bangla fine-tuning.",
+    "english_terms_used": [
+      "blood pressure", "pressure", "sugar", "diabetes", "gastric", "allergy",
+      "antibiotic", "tablet", "capsule", "syrup", "injection", "saline",
+      "x-ray", "ultrasound", "ECG", "CBC", "nebulizer", "inhaler", "asthma",
+      "fever", "cough", "cold", "antacid", "paracetamol", "napa", "seclo",
+      "losectil", "monas", "fexo", "ventolin", "salbutamol"
+    ],
+    "bangla_terms": [
+      "জ্বর", "কাশি", "সর্দি", "গলা ব্যথা", "মাথা ব্যথা", "পেট ব্যথা",
+      "শ্বাসকষ্ট", "বমি", "বমি বমি ভাব", "পাতলা পায়খানা", "কোষ্ঠকাঠিন্য",
+      "দুর্বলতা", "ক্লান্তি", "চুলকানি", "ফুসকুড়ি", "প্রেসার", "ডায়াবেটিস",
+      "গ্যাস্ট্রিক", "বুক ধড়ফড়", "মাথা ঘোরা", "ওষুধ", "ইনজেকশন", "রক্ত",
+      "শরীর ব্যথা", "নাক বন্ধ", "হাঁপানি"
+    ],
+    "patient_expressions_bn": [
+      "শরীর ম্যাজম্যাজ করছে", "দম বন্ধ লাগছে", "বুকে চাপ লাগছে",
+      "খেতে ইচ্ছে করছে না", "মাথা ঘুরছে", "গা গুলাচ্ছে", "জ্বর জ্বর ভাব"
+    ]
+  }
+}

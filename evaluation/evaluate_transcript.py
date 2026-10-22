@@ -21,10 +21,18 @@ It is NOT clinically comprehensive, certified, or intended for autonomous clinic
 
 import os
 import re
+import sys
 import json
 import argparse
 import pathlib
 from typing import Dict, List, Tuple, Any, Optional
+
+# Ensure the project root is importable when this module is run as a script
+# (e.g. `python evaluation/evaluate_transcript.py`), so sibling packages such as
+# `audio` (the deterministic clinical normalizer) resolve correctly.
+_PROJECT_ROOT = str(pathlib.Path(__file__).resolve().parent.parent)
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 
 # Word-to-number mapping for normalizing numerals
 WORD_TO_NUM = {
@@ -165,6 +173,87 @@ def compute_wer_and_alignment(ref_text: str, hyp_text: str, normalize_numbers: b
         "reference_normalized": ref_norm,
         "hypothesis_normalized": hyp_norm
     }
+
+
+def strip_abandoned_false_starts(text: str) -> str:
+    """
+    Remove abandoned acoustic false-starts from a hypothesis, preserving the
+    corrected target word.
+
+    A clinician who says "isupro- lisinopril" produced one clinical token
+    (lisinopril); the abandoned fragment "isupro-" is a verbatim disfluency, not
+    a transcription error. This removes only the trailing-hyphen fragment and
+    keeps the corrected word, so downstream scoring is not penalised for the
+    speaker's own self-correction.
+
+    This NEVER removes or alters numbers, units, or complete words. Only the
+    `prefix-` fragment immediately preceding a longer word is dropped.
+    """
+    out = text
+    for fs in detect_false_starts(text):
+        prefix = fs["prefix"][:-1]  # fragment without the trailing hyphen
+        out = re.sub(r"\b" + re.escape(prefix) + r"-\s+", "", out, count=1)
+    return re.sub(r"\s{2,}", " ", out).strip()
+
+
+def compute_clinical_normalized_wer(
+    ref_text: str,
+    hyp_text: str,
+    strip_disfluencies: bool = True,
+) -> Dict[str, Any]:
+    """
+    Compute a *clinically-normalized* Word Error Rate.
+
+    This is reported ALONGSIDE (never instead of) the raw WER. It applies the
+    same deterministic clinical normalization to BOTH the reference and the
+    hypothesis before scoring, so that clinically-identical surface forms are
+    treated as matches rather than errors:
+
+      - dosage units:   "500 milligrams"  == "500 mg"
+      - blood pressure: "138 over 84"      == "138/84"
+      - oxygen sat:     "97 percent"       == "97%"
+      - number words:   "type two"         == "type 2"
+
+    Facts are never changed: the clinical value must be identical on both sides
+    for it to count as a match. Optionally removes the speaker's own abandoned
+    false-starts from the hypothesis (verbatim disfluencies, not errors).
+
+    Returns the same shape as `compute_wer_and_alignment` plus a
+    `methodology` field documenting the transforms applied.
+    """
+    # Lazy import keeps the deterministic clinical normalizer optional and
+    # avoids any import cost for callers that only need raw WER.
+    from audio.normalization import (
+        MedicalNormalizer,
+        normalize_spoken_numbers,
+        canonicalize_unit_phrases,
+    )
+
+    normalizer = MedicalNormalizer()
+
+    def _clinical_canon(text: str) -> str:
+        # 1. Contextual vitals/dosage/frequency normalization.
+        out, _ = normalizer.normalize_text(text)
+        # 2. Canonicalize clinically-equivalent unit phrases (mmHg, mg/dL, ...).
+        out = canonicalize_unit_phrases(out)
+        # 3. Convert any remaining spoken numbers/decimals to digit form.
+        out = normalize_spoken_numbers(out)
+        return out
+
+    hyp_source = strip_abandoned_false_starts(hyp_text) if strip_disfluencies else hyp_text
+
+    ref_norm = _clinical_canon(ref_text)
+    hyp_norm = _clinical_canon(hyp_source)
+
+    result = compute_wer_and_alignment(ref_norm, hyp_norm, normalize_numbers=True)
+    result["methodology"] = {
+        "symmetric_clinical_normalization": True,
+        "spoken_number_normalization": True,
+        "unit_phrase_canonicalization": True,
+        "disfluency_stripping": strip_disfluencies,
+        "normalizer": "audio.normalization.MedicalNormalizer (deterministic, fact-preserving)",
+    }
+    return result
 
 
 def detect_false_starts(text: str) -> List[Dict[str, Any]]:
@@ -677,7 +766,8 @@ def format_evaluation_report(
     numeric_comp: Dict[str, Any],
     med_comp: Dict[str, Any],
     terms_comp: Dict[str, Any],
-    clinical_sig: List[Dict[str, str]]
+    clinical_sig: List[Dict[str, str]],
+    clinical_wer_res: Optional[Dict[str, Any]] = None
 ) -> str:
     """Format the complete multi-metric clinical evaluation report."""
     lines = []
@@ -706,7 +796,28 @@ def format_evaluation_report(
     lines.append(f"  Total Word Errors (S+D+I):{wer_res['total_errors']}")
     lines.append(f"  Word Error Rate (WER):    {wer_res['wer']:.4f} ({wer_res['wer']*100:.2f}%)")
     lines.append("")
-    
+
+    # 1B. Clinically-Normalized ASR Metrics (reported ALONGSIDE raw WER)
+    if clinical_wer_res is not None:
+        lines.append(sub_sep)
+        lines.append("1B. CLINICALLY-NORMALIZED ASR METRICS (unit/vital/disfluency-equivalent)")
+        lines.append(sub_sep)
+        lines.append("  Applies the SAME deterministic clinical normalization to reference and")
+        lines.append("  hypothesis so clinically-identical surface forms (500 milligrams == 500 mg,")
+        lines.append("  138 over 84 == 138/84, 97 percent == 97%) and the speaker's own abandoned")
+        lines.append("  false-starts are not counted as recognition errors. Clinical VALUES must")
+        lines.append("  still match exactly; this never masks a changed number, drug, or dose.")
+        lines.append("")
+        lines.append(f"  Reference Word Count:     {clinical_wer_res['reference_word_count']}")
+        lines.append(f"  Hypothesis Word Count:    {clinical_wer_res['hypothesis_word_count']}")
+        lines.append(f"  Substitutions (S):        {clinical_wer_res['substitutions']}")
+        lines.append(f"  Deletions (D):            {clinical_wer_res['deletions']}")
+        lines.append(f"  Insertions (I):           {clinical_wer_res['insertions']}")
+        lines.append(f"  Total Word Errors (S+D+I):{clinical_wer_res['total_errors']}")
+        lines.append(f"  Clinically-Normalized WER:{clinical_wer_res['wer']:.4f} ({clinical_wer_res['wer']*100:.2f}%)")
+        lines.append(f"  Clinically-Normalized Acc:{(1 - clinical_wer_res['wer'])*100:.2f}%")
+        lines.append("")
+
     # 2. Word-Level Alignment Differences
     lines.append(sub_sep)
     lines.append("2. WORD-LEVEL ALIGNMENT DIFFERENCES")
@@ -852,9 +963,12 @@ def format_evaluation_report(
 
 def evaluate(ref_text: str, hyp_text: str, entities_cfg: Dict[str, Any]) -> Tuple[Dict[str, Any], str]:
     """Execute complete evaluation pipeline and return structured results and formatted report."""
-    # 1. General ASR metrics & alignment
+    # 1. General ASR metrics & alignment (raw)
     wer_res = compute_wer_and_alignment(ref_text, hyp_text, normalize_numbers=True)
-    
+
+    # 1B. Clinically-normalized ASR metrics (reported alongside raw WER)
+    clinical_wer_res = compute_clinical_normalized_wer(ref_text, hyp_text)
+
     # 2. False starts & stutters
     false_starts = detect_false_starts(hyp_text)
     
@@ -879,15 +993,17 @@ def evaluate(ref_text: str, hyp_text: str, entities_cfg: Dict[str, Any]) -> Tupl
         ref_text=ref_text,
         hyp_text=hyp_text,
         wer_res=wer_res,
+        clinical_wer_res=clinical_wer_res,
         false_starts=false_starts,
         numeric_comp=num_comp,
         med_comp=med_comp,
         terms_comp=terms_comp,
         clinical_sig=clinical_sig
     )
-    
+
     results = {
         "wer_metrics": wer_res,
+        "clinical_normalized_wer_metrics": clinical_wer_res,
         "false_starts": false_starts,
         "numeric_comparison": num_comp,
         "medication_comparison": med_comp,
