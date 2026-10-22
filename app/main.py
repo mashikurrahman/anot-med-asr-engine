@@ -53,10 +53,13 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
-    # CORS configuration (restricted to local / internal backend calls)
+    # CORS configuration. In production, restrict to the configured origins
+    # (ANOT_CORS_ORIGINS, comma-separated, e.g. your web app's domain).
+    cors_origins = (["*"] if settings.DEBUG else settings.cors_origins_list) or \
+        ["http://localhost:3000", "http://127.0.0.1:3000"]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"] if settings.DEBUG else ["http://localhost:3000", "http://127.0.0.1:3000"],
+        allow_origins=cors_origins,
         allow_credentials=True,
         allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=["*"],

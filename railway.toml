@@ -1,0 +1,16 @@
+# Railway deployment config — Anot Medical ASR (Whisper engine)
+# Builds the Dockerfile and runs the FastAPI service. Set secrets
+# (ANOT_ASR_API_KEY, ANOT_CORS_ORIGINS) in the Railway dashboard, not here.
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Railway injects $PORT; the Dockerfile CMD binds to it.
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/ready"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+numReplicas = 1
