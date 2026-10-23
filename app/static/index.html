@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anot ASR Console</title>
+<style>
+  :root{--bg:#0e1118;--panel:#161b26;--panel2:#0f141e;--line:#263044;--text:#e8edf5;
+    --muted:#95a1b4;--accent:#6ea8fe;--ok:#3ecf8e;--warn:#f5b451;--bad:#ff6b6b;}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+  header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+  header h1{font-size:17px;margin:0;font-weight:650}
+  .dot{width:9px;height:9px;border-radius:50%;background:#555;flex:none}
+  .dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok)}.dot.bad{background:var(--bad)}
+  #status{color:var(--muted);font-size:13px}
+  .wrap{max-width:900px;margin:0 auto;padding:22px 16px 80px}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .card h2{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  input,select{width:100%;padding:9px 10px;background:var(--panel2);color:var(--text);
+    border:1px solid var(--line);border-radius:8px;font-size:14px}
+  .row{display:flex;gap:10px}.row>div{flex:1}
+  #drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);cursor:pointer;transition:.15s}
+  #drop.hot{border-color:var(--accent);color:var(--text);background:var(--panel2)}
+  audio{width:100%;margin-top:10px}
+  button{margin-top:14px;width:100%;padding:12px;font-size:15px;font-weight:650;cursor:pointer;
+    background:var(--accent);color:#06122b;border:0;border-radius:10px}
+  button:disabled{opacity:.45;cursor:default}
+  button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500;width:auto;padding:6px 12px;margin:0}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .pill{font-size:12px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+  .pill b{color:var(--text);font-weight:600}
+  pre#transcript{white-space:pre-wrap;word-break:break-word;background:var(--panel2);border:1px solid var(--line);
+    border-radius:10px;padding:14px;font-size:14px;max-height:36vh;overflow:auto;margin:0}
+  .seg{display:flex;gap:10px;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+  .seg:last-child{border-bottom:0}
+  .seg .ts{color:var(--muted);flex:none;width:92px;font-variant-numeric:tabular-nums}
+  .seg.low{background:rgba(255,107,107,.08)}.seg.low .ts{color:var(--warn)}
+  #segs{background:var(--panel2);border:1px solid var(--line);border-radius:10px;max-height:34vh;overflow:auto;margin-top:12px}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px}
+  .err{color:var(--bad)}.spin{display:inline-block;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+  .flexbetween{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  details{margin-top:10px}summary{cursor:pointer;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <span class="dot" id="dot"></span>
+  <h1>Anot Medical ASR — Console</h1>
+  <span id="status">checking…</span>
+</header>
+<div class="wrap">
+  <div class="grid">
+    <div class="card">
+      <h2>Connection</h2>
+      <label>API key (X-API-Key)</label>
+      <input id="key" type="password" placeholder="paste your ANOT_ASR_API_KEY" />
+      <div class="row">
+        <div><label>Mode</label>
+          <select id="mode"><option value="conversation">conversation (visit)</option>
+          <option value="dictation">dictation</option></select></div>
+        <div><label>Engine</label>
+          <select id="engine"><option value="whisper">whisper</option>
+          <option value="medasr">medasr</option></select></div>
+        <div><label>Language</label>
+          <select id="language"><option value="">default</option><option value="auto">auto</option>
+          <option value="en">en</option><option value="bn">bn</option></select></div>
+      </div>
+      <details><summary>Advanced: service URL</summary>
+        <input id="url" placeholder="(same server)" /></details>
+      <p class="hint">The key is saved in this browser only. Audio is sent only to this service.</p>
+    </div>
+    <div class="card">
+      <h2>Recording</h2>
+      <div id="drop">Drag an audio file here, or click to choose
+        <br><small>.m4a .wav .mp3 .flac .mp4 .aac .ogg</small></div>
+      <input id="file" type="file" accept="audio/*,.m4a,.wav,.mp3,.flac,.mp4,.aac,.ogg" style="display:none" />
+      <audio id="preview" controls style="display:none"></audio>
+      <div id="fname" class="hint"></div>
+      <button id="go" disabled>Transcribe</button>
+    </div>
+  </div>
+  <div class="card" id="out" style="display:none;margin-top:16px">
+    <div class="flexbetween"><h2 style="margin:0">Result</h2>
+      <button class="ghost" id="copy">Copy transcript</button></div>
+    <div class="pills" id="meta" style="margin-top:12px"></div>
+    <pre id="transcript"></pre>
+    <div id="segs"></div>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const base=()=>($('url').value.trim().replace(/\/$/,'')||window.location.origin);
+// restore
+try{ $('key').value=localStorage.getItem('anot_key')||'';
+  if(localStorage.getItem('anot_mode'))$('mode').value=localStorage.getItem('anot_mode');
+  if(localStorage.getItem('anot_engine'))$('engine').value=localStorage.getItem('anot_engine');
+  if(localStorage.getItem('anot_lang')!==null)$('language').value=localStorage.getItem('anot_lang');
+}catch(e){}
+const save=()=>{try{localStorage.setItem('anot_key',$('key').value);localStorage.setItem('anot_mode',$('mode').value);
+  localStorage.setItem('anot_engine',$('engine').value);localStorage.setItem('anot_lang',$('language').value);}catch(e){}};
+['key','mode','engine','language','url'].forEach(id=>$(id).addEventListener('change',save));
+async function checkHealth(){
+  $('status').textContent='checking…';$('dot').className='dot';
+  try{ const h=await fetch(base()+'/health'); if(!h.ok)throw 0;
+    const r=await fetch(base()+'/ready'); const rd=r.ok?await r.json():{};
+    if(r.ok&&rd.ready){$('dot').className='dot ok';$('status').textContent='online · '+(rd.model_id||'model')+' · '+(rd.device||'');}
+    else{$('dot').className='dot';$('status').textContent='up, model still loading… retry shortly';}
+  }catch(e){$('dot').className='dot bad';$('status').textContent='unreachable';}
+}
+checkHealth();
+let file=null;const drop=$('drop'),fileInput=$('file');
+drop.onclick=()=>fileInput.click();
+['dragover','dragenter'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('hot');}));
+['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('hot');}));
+drop.addEventListener('drop',ev=>{if(ev.dataTransfer.files[0])setFile(ev.dataTransfer.files[0]);});
+fileInput.onchange=()=>{if(fileInput.files[0])setFile(fileInput.files[0]);};
+function setFile(f){file=f;$('fname').textContent='Selected: '+f.name+' ('+(f.size/1048576).toFixed(2)+' MB)';
+  const p=$('preview');p.src=URL.createObjectURL(f);p.style.display='block';$('go').disabled=false;}
+function fmt(t){if(t==null)return'?';const m=Math.floor(t/60);return(m?m+':'+String(Math.floor(t%60)).padStart(2,'0'):(t).toFixed(1)+'s');}
+$('go').onclick=async()=>{
+  if(!file)return;
+  const fd=new FormData();fd.append('file',file);fd.append('mode',$('mode').value);fd.append('engine',$('engine').value);
+  if($('language').value)fd.append('language',$('language').value);
+  $('go').disabled=true;$('out').style.display='block';$('meta').innerHTML='';$('segs').innerHTML='';
+  $('transcript').innerHTML='<span class="spin">◐</span> transcribing…';let secs=0;
+  const timer=setInterval(()=>{secs++;$('go').textContent='Transcribing… '+secs+'s';},1000);
+  const t0=performance.now();
+  try{
+    const res=await fetch(base()+'/api/v1/transcribe',{method:'POST',headers:{'X-API-Key':$('key').value},body:fd});
+    clearInterval(timer);const took=((performance.now()-t0)/1000).toFixed(1);
+    if(!res.ok){const txt=await res.text();let msg='HTTP '+res.status+' — '+txt;
+      if(res.status===401)msg='401 Unauthorized — check your API key.';
+      if(res.status===503)msg='503 — model still loading, wait and retry.';
+      $('transcript').innerHTML='<span class="err">'+msg+'</span>';
+    }else{const d=await res.json();const c=d.confidence||{},p=d.performance||{};
+      $('meta').innerHTML=pill('engine',d.engine||$('engine').value)+pill('lang',d.language||'?')+
+        pill('duration',fmt(d.duration_seconds))+pill('rtf',p.rtf??'?')+pill('took',took+'s')+
+        pill('low-conf',(c.low_confidence_segments??'?')+'/'+(c.segments_total??'?'));
+      $('transcript').textContent=d.transcript||'(empty transcript)';
+      const segs=d.segments||[];
+      $('segs').innerHTML=segs.length?segs.map(s=>'<div class="seg'+(s.low_confidence?' low':'')+'"><span class="ts">'+
+        fmt(s.start)+'–'+fmt(s.end)+'</span><span>'+esc(s.text||'')+'</span></div>').join(''):'';
+    }
+  }catch(e){clearInterval(timer);$('transcript').innerHTML='<span class="err">Request failed: '+e.message+'</span>';}
+  $('go').disabled=false;$('go').textContent='Transcribe';save();
+};
+function pill(k,v){return '<span class="pill">'+k+': <b>'+v+'</b></span>';}
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+$('copy').onclick=()=>{navigator.clipboard.writeText($('transcript').textContent||'');$('copy').textContent='Copied!';setTimeout(()=>$('copy').textContent='Copy transcript',1200);};
+</script>
+</body>
+</html>

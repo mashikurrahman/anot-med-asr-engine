@@ -98,6 +98,15 @@ def create_app() -> FastAPI:
 
     # Include API routes
     app.include_router(router)
+
+    # Serve the built-in test console at the root URL so the engine can be tested
+    # from any browser (same-origin -> no CORS, no local server needed).
+    import pathlib
+    from fastapi.staticfiles import StaticFiles
+    static_dir = pathlib.Path(__file__).resolve().parent / "static"
+    if static_dir.exists():
+        app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="console")
+
     return app
 
 
