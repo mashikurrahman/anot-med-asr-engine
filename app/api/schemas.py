@@ -13,6 +13,7 @@ class HealthResponse(BaseModel):
     """Safe, minimal service health response."""
     status: str = Field(default="ok", example="ok")
     service: str = Field(default="anot-asr", example="anot-asr")
+    version: Optional[str] = Field(default=None, description="Service build version", example="1.1.0-console")
 
 
 class ReadyResponse(BaseModel):

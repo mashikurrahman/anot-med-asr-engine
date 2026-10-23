@@ -19,7 +19,7 @@ class Settings(BaseModel):
 
     # Service metadata
     SERVICE_NAME: str = "anot-asr"
-    VERSION: str = "1.0.0"
+    VERSION: str = "1.1.0-console"
     ENVIRONMENT: str = Field(default_factory=lambda: os.getenv("ANOT_ASR_ENV", "development"))
     DEBUG: bool = Field(default_factory=lambda: os.getenv("ANOT_ASR_DEBUG", "false").lower() == "true")
 

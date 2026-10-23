@@ -32,7 +32,8 @@ async def health_check() -> HealthResponse:
     """Check service viability."""
     return HealthResponse(
         status="ok",
-        service=settings.SERVICE_NAME
+        service=settings.SERVICE_NAME,
+        version=settings.VERSION
     )
 
 
