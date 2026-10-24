@@ -39,7 +39,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
     numpy>=1.26.0
 
 # ---- Pre-bake the ASR model into the image (no runtime download) ----
-ARG WHISPER_MODEL=distil-large-v3
+# large-v3 = best accuracy (fits Railway Hobby 8 GB RAM). Switch to
+# distil-large-v3 for ~2x faster CPU inference at lower accuracy.
+ARG WHISPER_MODEL=large-v3
 ENV ANOT_WHISPER_MODEL=${WHISPER_MODEL}
 RUN python -c "from faster_whisper import WhisperModel; WhisperModel('${WHISPER_MODEL}', device='cpu', compute_type='int8')"
 
