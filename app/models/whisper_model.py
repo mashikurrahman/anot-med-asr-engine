@@ -101,14 +101,16 @@ class WhisperASRModel:
         )
         try:
             self._model = WhisperModel(
-                self._model_size, device=chosen_device, compute_type=self._compute_type
+                self._model_size, device=chosen_device, compute_type=self._compute_type,
+                cpu_threads=settings.WHISPER_CPU_THREADS,
             )
             self._device = chosen_device
         except Exception as e:
             # CTranslate2 may reject a compute_type on some hardware; fall back.
             logger.warning(f"Whisper load with compute_type={self._compute_type} failed ({e}); "
                            f"retrying with compute_type=int8 on cpu.")
-            self._model = WhisperModel(self._model_size, device="cpu", compute_type="int8")
+            self._model = WhisperModel(self._model_size, device="cpu", compute_type="int8",
+                                       cpu_threads=settings.WHISPER_CPU_THREADS)
             self._device = "cpu"
             self._compute_type = "int8"
 

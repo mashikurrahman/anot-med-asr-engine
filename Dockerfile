@@ -58,9 +58,13 @@ ENV ANOT_ASR_ENGINE=whisper \
     ANOT_ASR_DEBUG=false \
     ANOT_ASR_HOST=0.0.0.0 \
     ANOT_WHISPER_COMPUTE_TYPE=int8 \
+    ANOT_WHISPER_BEAM_SIZE=1 \
+    ANOT_WHISPER_CPU_THREADS=0 \
     ANOT_AUDIO_ENHANCE=true \
     ANOT_ASR_MAX_CONCURRENT_JOBS=1 \
     PYTHONUNBUFFERED=1
+# Speed: beam_size=1 is ~1.6x faster than 5 on CPU (minor accuracy cost).
+# Set ANOT_WHISPER_BEAM_SIZE=5 in Railway for maximum accuracy.
 # NOTE: set ANOT_ASR_API_KEY and ANOT_CORS_ORIGINS in the Railway dashboard.
 
 EXPOSE 8000

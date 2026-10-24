@@ -45,7 +45,11 @@ class Settings(BaseModel):
     WHISPER_MODEL_SIZE: str = Field(default_factory=lambda: os.getenv("ANOT_WHISPER_MODEL", "large-v3"))
     WHISPER_DEVICE: str = Field(default_factory=lambda: os.getenv("ANOT_WHISPER_DEVICE", "cpu").lower())
     WHISPER_COMPUTE_TYPE: str = Field(default_factory=lambda: os.getenv("ANOT_WHISPER_COMPUTE_TYPE", "int8"))
+    # Beam size: 5 = most accurate, 1 = ~1.6x faster on CPU with minor accuracy cost.
     WHISPER_BEAM_SIZE: int = Field(default_factory=lambda: int(os.getenv("ANOT_WHISPER_BEAM_SIZE", "5")))
+    # CPU threads for CTranslate2 (0 = auto-detect all cores). Set to the vCPU
+    # count on constrained hosts to use all available cores.
+    WHISPER_CPU_THREADS: int = Field(default_factory=lambda: int(os.getenv("ANOT_WHISPER_CPU_THREADS", "0")))
     # Language: "en" (default), a specific code like "bn" (Bengali), or "auto"
     # to let Whisper detect per recording. Can also be set per request.
     WHISPER_LANGUAGE: str = Field(default_factory=lambda: os.getenv("ANOT_WHISPER_LANGUAGE", "en"))
