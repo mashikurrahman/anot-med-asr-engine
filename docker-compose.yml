@@ -14,8 +14,8 @@ services:
       - ANOT_ASR_DEVICE=cpu
       - ANOT_ASR_MODE_DEFAULT=dictation
       - ANOT_ASR_DECODER_DEFAULT=greedy
-      - ANOT_ASR_MAX_UPLOAD_MB=100
-      - ANOT_ASR_MAX_DURATION_SECONDS=1800
+      - ANOT_ASR_MAX_UPLOAD_MB=500
+      - ANOT_ASR_MAX_DURATION_SECONDS=14400
       - ANOT_ASR_MAX_CONCURRENT_JOBS=2
     volumes:
       # Mount HuggingFace cache to persist pre-downloaded MedASR model

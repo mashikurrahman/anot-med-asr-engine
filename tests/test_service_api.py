@@ -121,9 +121,9 @@ class TestConfigAndResourceProtection(unittest.TestCase):
         self.assertEqual(settings.DEVICE, "cpu")
         self.assertEqual(settings.MODE_DEFAULT, "dictation")
         self.assertEqual(settings.DECODER_DEFAULT, "greedy")
-        self.assertEqual(settings.MAX_UPLOAD_MB, 100)
-        self.assertEqual(settings.MAX_DURATION_SECONDS, 1800.0)
-        self.assertEqual(settings.MAX_AUDIO_DURATION_SECONDS, 1800.0)
+        self.assertEqual(settings.MAX_UPLOAD_MB, 500)
+        self.assertEqual(settings.MAX_DURATION_SECONDS, 14400.0)
+        self.assertEqual(settings.MAX_AUDIO_DURATION_SECONDS, 14400.0)
         self.assertEqual(settings.MAX_CONCURRENT_JOBS, 2)
         self.assertFalse(settings.LM_ENABLED)
 

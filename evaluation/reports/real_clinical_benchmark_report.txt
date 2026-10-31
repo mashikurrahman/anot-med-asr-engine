@@ -1,0 +1,70 @@
+================================================================================
+       ANOT HEALTH — 29 REAL ENCOUNTERS CLINICAL BENCHMARK REPORT
+================================================================================
+
+
+--- WHISPER LARGE / TDT AGGREGATE PERFORMANCE ---
+Encounters Evaluated:             29
+Raw WER / Accuracy:               18.92% / 81.08%
+Clinical-Normalized WER / Acc:    19.07% / 80.93%
+
+Medication Regimen Recognition:
+  Matched Medications:            25
+  Omitted Medications:            3
+  Added / Unmatched Medications:  0
+  Medication Recall:              89.3%
+  Dosage Mismatches:              0
+  Normalized Equivalent Dosages:  0
+
+Critical Numeric & Vitals Recognition:
+  Exact / Equivalent Matches:     144
+  Critical Numeric Mismatches:    20
+  Omitted Numeric Values:         0
+  Numeric Recall:                 87.8%
+
+Medical Vocabulary by Domain (Matched / Omitted / Added):
+  diagnoses        Matched:  15 | Omitted:   0 | Added:   0 | Recall: 100.0%
+  symptoms         Matched:  58 | Omitted:   0 | Added:   0 | Recall: 100.0%
+  procedures       Matched:   9 | Omitted:   0 | Added:   3 | Recall: 100.0%
+  anatomy          Matched:  52 | Omitted:   5 | Added:   0 | Recall:  91.2%
+  lab_tests        Matched:   0 | Omitted:   0 | Added:   0 | Recall:   0.0%
+  vitals           Matched:   0 | Omitted:   0 | Added:   0 | Recall:   0.0%
+
+Clinically Significant Error Flags:
+  HIGH Severity:                  16
+  MEDIUM Severity:                4
+  LOW Severity:                   0
+--------------------------------------------------------------------------------
+
+--- PARAKEET LARGE / TDT AGGREGATE PERFORMANCE ---
+Encounters Evaluated:             29
+Raw WER / Accuracy:               19.4% / 80.6%
+Clinical-Normalized WER / Acc:    19.31% / 80.69%
+
+Medication Regimen Recognition:
+  Matched Medications:            9
+  Omitted Medications:            19
+  Added / Unmatched Medications:  0
+  Medication Recall:              32.1%
+  Dosage Mismatches:              0
+  Normalized Equivalent Dosages:  0
+
+Critical Numeric & Vitals Recognition:
+  Exact / Equivalent Matches:     157
+  Critical Numeric Mismatches:    14
+  Omitted Numeric Values:         0
+  Numeric Recall:                 91.8%
+
+Medical Vocabulary by Domain (Matched / Omitted / Added):
+  diagnoses        Matched:  14 | Omitted:   1 | Added:   0 | Recall:  93.3%
+  symptoms         Matched:  57 | Omitted:   1 | Added:   0 | Recall:  98.3%
+  procedures       Matched:   9 | Omitted:   0 | Added:   6 | Recall: 100.0%
+  anatomy          Matched:  53 | Omitted:   4 | Added:   0 | Recall:  93.0%
+  lab_tests        Matched:   0 | Omitted:   0 | Added:   0 | Recall:   0.0%
+  vitals           Matched:   0 | Omitted:   0 | Added:   0 | Recall:   0.0%
+
+Clinically Significant Error Flags:
+  HIGH Severity:                  13
+  MEDIUM Severity:                2
+  LOW Severity:                   0
+--------------------------------------------------------------------------------

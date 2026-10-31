@@ -1,3 +1,9 @@
+# Local-only ASR experiment outputs (contain PHI-derived transcript text)
+scratch_transcripts.json
+scratch_*.json
+scratch_*.py
+scratch/
+
 # Virtual Environment
 .venv/
 venv/

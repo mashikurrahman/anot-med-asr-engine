@@ -6,8 +6,8 @@ Stage 11: Endpoints for health, readiness, and audio transcription.
 """
 
 import pathlib
-from typing import Optional
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from typing import Any, Dict, List, Optional
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
 
 from app.api.schemas import (
     ErrorResponse,
@@ -185,3 +185,108 @@ async def transcribe_conversation(
         engine=engine if isinstance(engine, str) else None,
         language=language if isinstance(language, str) else None,
     )
+
+
+@router.post(
+    "/v1/listen",
+    summary="Deepgram Nova-3 Drop-In Compatibility Endpoint",
+    description="Accepts raw audio or multipart forms and returns Deepgram-format JSON to migrate existing web apps with 0 client changes."
+)
+async def deepgram_compatible_listen(
+    request: Request,
+    model: Optional[str] = None,
+    smart_format: Optional[bool] = True,
+    language: Optional[str] = "en",
+) -> Dict[str, Any]:
+    """
+    Drop-in compatibility route for apps built on Deepgram Nova-3 Medical SDK / REST API.
+    """
+    content_type = request.headers.get("content-type", "")
+    filename = "recording.wav"
+    file_bytes = b""
+
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        for field_name in ["file", "audio", "buffer"]:
+            if field_name in form and hasattr(form[field_name], "read"):
+                file_bytes = await form[field_name].read()
+                filename = getattr(form[field_name], "filename", "recording.wav")
+                break
+        if not file_bytes and form:
+            first_val = list(form.values())[0]
+            if hasattr(first_val, "read"):
+                file_bytes = await first_val.read()
+                filename = getattr(first_val, "filename", "recording.wav")
+    else:
+        file_bytes = await request.body()
+        if "audio/m4a" in content_type or "mp4" in content_type:
+            filename = "recording.m4a"
+        elif "audio/mp3" in content_type or "mpeg" in content_type:
+            filename = "recording.mp3"
+        elif "audio/ogg" in content_type:
+            filename = "recording.ogg"
+
+    if not file_bytes:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Empty audio payload."
+        )
+
+    asr = ASRService.get_instance()
+    req_id = generate_request_id()
+
+    # If model mentions dictation, route to MedASR; otherwise default to Whisper for conversational visits
+    engine_choice = "medasr" if (model and "dictat" in model.lower()) else "whisper"
+    mode_choice = "dictation" if engine_choice == "medasr" else "conversation"
+
+    result = await asr.transcribe_upload(
+        file_bytes=file_bytes,
+        original_filename=filename,
+        mode=mode_choice,
+        decoder="greedy",
+        normalize=bool(smart_format),
+        request_id=req_id,
+        engine=engine_choice,
+        language=(language if language != "auto" else None),
+    )
+
+    transcript = result.get("transcript", "")
+    segments = result.get("segments", [])
+    words = []
+    for s in segments:
+        for w in (s.get("text", "")).split():
+            words.append({
+                "word": w,
+                "start": s.get("start", 0.0),
+                "end": s.get("end", 0.0),
+                "confidence": 0.98
+            })
+
+    return {
+        "metadata": {
+            "transaction_key": req_id,
+            "request_id": req_id,
+            "duration": result.get("duration_seconds", 0.0),
+            "channels": 1,
+            "models": [f"anot-{engine_choice}"]
+        },
+        "results": {
+            "channels": [
+                {
+                    "alternatives": [
+                        {
+                            "transcript": transcript,
+                            "confidence": 0.98,
+                            "words": words,
+                            "paragraphs": {
+                                "transcript": transcript,
+                                "paragraphs": [
+                                    {"sentences": [{"text": transcript, "start": 0.0, "end": result.get("duration_seconds", 0.0)}]}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }

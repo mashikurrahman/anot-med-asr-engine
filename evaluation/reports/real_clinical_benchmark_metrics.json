@@ -1,0 +1,581 @@
+{
+  "summary": {
+    "whisper": {
+      "encounters_evaluated": 29,
+      "ref_words_total": 0,
+      "raw_wer": {
+        "errors": 4456,
+        "ref_words": 23550,
+        "wer_pct": 18.92,
+        "accuracy_pct": 81.08
+      },
+      "clinical_wer": {
+        "errors": 4483,
+        "ref_words": 23511,
+        "wer_pct": 19.07,
+        "accuracy_pct": 80.93
+      },
+      "medications": {
+        "matched": 25,
+        "omitted": 3,
+        "added": 0,
+        "dosage_mismatches": 0,
+        "dosage_equivalents": 0,
+        "recall_pct": 89.3
+      },
+      "numerics": {
+        "matched": 144,
+        "critical_mismatches": 20,
+        "equivalent_notations": 24,
+        "omissions": 0,
+        "additions": 0,
+        "recall_pct": 87.8
+      },
+      "terms": {
+        "diagnoses": {
+          "matched": 15,
+          "omitted": 0,
+          "added": 0
+        },
+        "symptoms": {
+          "matched": 58,
+          "omitted": 0,
+          "added": 0
+        },
+        "procedures": {
+          "matched": 9,
+          "omitted": 0,
+          "added": 3
+        },
+        "anatomy": {
+          "matched": 52,
+          "omitted": 5,
+          "added": 0
+        },
+        "lab_tests": {
+          "matched": 0,
+          "omitted": 0,
+          "added": 0
+        },
+        "vitals": {
+          "matched": 0,
+          "omitted": 0,
+          "added": 0
+        }
+      },
+      "clinical_significance": {
+        "HIGH": 16,
+        "MEDIUM": 4,
+        "LOW": 0
+      },
+      "false_starts_detected": 0
+    },
+    "parakeet": {
+      "encounters_evaluated": 29,
+      "ref_words_total": 0,
+      "raw_wer": {
+        "errors": 4568,
+        "ref_words": 23550,
+        "wer_pct": 19.4,
+        "accuracy_pct": 80.6
+      },
+      "clinical_wer": {
+        "errors": 4541,
+        "ref_words": 23511,
+        "wer_pct": 19.31,
+        "accuracy_pct": 80.69
+      },
+      "medications": {
+        "matched": 9,
+        "omitted": 19,
+        "added": 0,
+        "dosage_mismatches": 0,
+        "dosage_equivalents": 0,
+        "recall_pct": 32.1
+      },
+      "numerics": {
+        "matched": 157,
+        "critical_mismatches": 14,
+        "equivalent_notations": 18,
+        "omissions": 0,
+        "additions": 0,
+        "recall_pct": 91.8
+      },
+      "terms": {
+        "diagnoses": {
+          "matched": 14,
+          "omitted": 1,
+          "added": 0
+        },
+        "symptoms": {
+          "matched": 57,
+          "omitted": 1,
+          "added": 0
+        },
+        "procedures": {
+          "matched": 9,
+          "omitted": 0,
+          "added": 6
+        },
+        "anatomy": {
+          "matched": 53,
+          "omitted": 4,
+          "added": 0
+        },
+        "lab_tests": {
+          "matched": 0,
+          "omitted": 0,
+          "added": 0
+        },
+        "vitals": {
+          "matched": 0,
+          "omitted": 0,
+          "added": 0
+        }
+      },
+      "clinical_significance": {
+        "HIGH": 13,
+        "MEDIUM": 2,
+        "LOW": 0
+      },
+      "false_starts_detected": 0
+    }
+  },
+  "per_encounter": [
+    {
+      "file": "100417",
+      "whisper_raw_wer": 17.6,
+      "whisper_clin_wer": 17.6,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 2,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 21.7,
+      "parakeet_clin_wer": 21.7,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 2,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "119916",
+      "whisper_raw_wer": 15.8,
+      "whisper_clin_wer": 15.8,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 0,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 16.7,
+      "parakeet_clin_wer": 16.7,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 0,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "135896",
+      "whisper_raw_wer": 52.9,
+      "whisper_clin_wer": 53.2,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 1,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 40.8,
+      "parakeet_clin_wer": 41.1,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 1,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "143641",
+      "whisper_raw_wer": 19.8,
+      "whisper_clin_wer": 19.8,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 1,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 19.5,
+      "parakeet_clin_wer": 19.5,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 1,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "146833a146834",
+      "whisper_raw_wer": 23.0,
+      "whisper_clin_wer": 23.0,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 2,
+      "whisper_num_mismatch": 1,
+      "parakeet_raw_wer": 20.4,
+      "parakeet_clin_wer": 20.5,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 2,
+      "parakeet_num_mismatch": 1
+    },
+    {
+      "file": "146976",
+      "whisper_raw_wer": 29.3,
+      "whisper_clin_wer": 28.9,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 0,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 30.0,
+      "parakeet_clin_wer": 29.6,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 0,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "147028",
+      "whisper_raw_wer": 15.2,
+      "whisper_clin_wer": 15.2,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 1,
+      "whisper_num_matched": 2,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 14.3,
+      "parakeet_clin_wer": 14.3,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 2,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "147272, 79653, 131801, 135593",
+      "whisper_raw_wer": 14.1,
+      "whisper_clin_wer": 14.9,
+      "whisper_med_matched": 3,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 7,
+      "whisper_num_mismatch": 4,
+      "parakeet_raw_wer": 18.1,
+      "parakeet_clin_wer": 18.1,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 3,
+      "parakeet_num_matched": 7,
+      "parakeet_num_mismatch": 4
+    },
+    {
+      "file": "18160",
+      "whisper_raw_wer": 20.0,
+      "whisper_clin_wer": 20.6,
+      "whisper_med_matched": 2,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 2,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 17.8,
+      "parakeet_clin_wer": 17.8,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 2,
+      "parakeet_num_matched": 2,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "34538",
+      "whisper_raw_wer": 13.2,
+      "whisper_clin_wer": 13.2,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 0,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 13.1,
+      "parakeet_clin_wer": 13.1,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 0,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "47852",
+      "whisper_raw_wer": 22.2,
+      "whisper_clin_wer": 22.2,
+      "whisper_med_matched": 2,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 1,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 18.9,
+      "parakeet_clin_wer": 18.9,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 2,
+      "parakeet_num_matched": 1,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "9642, 124497, 27726",
+      "whisper_raw_wer": 14.3,
+      "whisper_clin_wer": 14.6,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 7,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 17.9,
+      "parakeet_clin_wer": 17.2,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 6,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "96797",
+      "whisper_raw_wer": 25.7,
+      "whisper_clin_wer": 25.7,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 0,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 24.1,
+      "parakeet_clin_wer": 24.1,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 0,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "Baz Allergy, Asthma _ Sinus Center 2",
+      "whisper_raw_wer": 11.0,
+      "whisper_clin_wer": 11.0,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 7,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 13.8,
+      "parakeet_clin_wer": 14.2,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 5,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "Baz Allergy, Asthma _ Sinus Center 3",
+      "whisper_raw_wer": 13.7,
+      "whisper_clin_wer": 13.7,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 2,
+      "whisper_num_matched": 6,
+      "whisper_num_mismatch": 1,
+      "parakeet_raw_wer": 15.9,
+      "parakeet_clin_wer": 16.2,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 2,
+      "parakeet_num_matched": 6,
+      "parakeet_num_mismatch": 1
+    },
+    {
+      "file": "Baz Allergy, Asthma _ Sinus Center 4",
+      "whisper_raw_wer": 22.9,
+      "whisper_clin_wer": 23.6,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 2,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 22.4,
+      "parakeet_clin_wer": 22.4,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 2,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "Baz Allergy, Asthma _ Sinus Center",
+      "whisper_raw_wer": 15.8,
+      "whisper_clin_wer": 15.4,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 2,
+      "whisper_num_mismatch": 2,
+      "parakeet_raw_wer": 16.1,
+      "parakeet_clin_wer": 15.9,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 2,
+      "parakeet_num_mismatch": 2
+    },
+    {
+      "file": "Herndon Ave (2)",
+      "whisper_raw_wer": 14.4,
+      "whisper_clin_wer": 15.5,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 8,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 16.0,
+      "parakeet_clin_wer": 16.0,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 10,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "Herndon Ave",
+      "whisper_raw_wer": 17.3,
+      "whisper_clin_wer": 14.7,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 4,
+      "whisper_num_mismatch": 2,
+      "parakeet_raw_wer": 23.3,
+      "parakeet_clin_wer": 19.8,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 4,
+      "parakeet_num_mismatch": 2
+    },
+    {
+      "file": "N Ash Ave (2)",
+      "whisper_raw_wer": 17.5,
+      "whisper_clin_wer": 17.0,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 5,
+      "whisper_num_mismatch": 1,
+      "parakeet_raw_wer": 23.8,
+      "parakeet_clin_wer": 23.4,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 4,
+      "parakeet_num_mismatch": 1
+    },
+    {
+      "file": "N Ash Ave 2",
+      "whisper_raw_wer": 11.9,
+      "whisper_clin_wer": 11.9,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 7,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 15.1,
+      "parakeet_clin_wer": 15.3,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 7,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "N Ash Ave 3",
+      "whisper_raw_wer": 13.5,
+      "whisper_clin_wer": 13.5,
+      "whisper_med_matched": 2,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 5,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 15.5,
+      "parakeet_clin_wer": 15.5,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 7,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "N Ash Ave 4",
+      "whisper_raw_wer": 13.3,
+      "whisper_clin_wer": 13.6,
+      "whisper_med_matched": 5,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 28,
+      "whisper_num_mismatch": 1,
+      "parakeet_raw_wer": 15.2,
+      "parakeet_clin_wer": 14.7,
+      "parakeet_med_matched": 2,
+      "parakeet_med_omitted": 3,
+      "parakeet_num_matched": 32,
+      "parakeet_num_mismatch": 1
+    },
+    {
+      "file": "N Ash Ave 5",
+      "whisper_raw_wer": 22.6,
+      "whisper_clin_wer": 22.0,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 8,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 23.4,
+      "parakeet_clin_wer": 24.1,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 8,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "N Ash Ave",
+      "whisper_raw_wer": 12.6,
+      "whisper_clin_wer": 13.4,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 7,
+      "whisper_num_mismatch": 3,
+      "parakeet_raw_wer": 16.6,
+      "parakeet_clin_wer": 16.7,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 10,
+      "parakeet_num_mismatch": 1
+    },
+    {
+      "file": "Premium Urgent Care (2)",
+      "whisper_raw_wer": 13.0,
+      "whisper_clin_wer": 13.5,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 7,
+      "whisper_num_mismatch": 1,
+      "parakeet_raw_wer": 15.6,
+      "parakeet_clin_wer": 15.2,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 9,
+      "parakeet_num_mismatch": 1
+    },
+    {
+      "file": "Premium Urgent Care 2",
+      "whisper_raw_wer": 7.9,
+      "whisper_clin_wer": 8.5,
+      "whisper_med_matched": 2,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 13,
+      "whisper_num_mismatch": 4,
+      "parakeet_raw_wer": 12.0,
+      "parakeet_clin_wer": 12.0,
+      "parakeet_med_matched": 1,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 16,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "Premium Urgent Care",
+      "whisper_raw_wer": 11.4,
+      "whisper_clin_wer": 12.0,
+      "whisper_med_matched": 1,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 6,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 15.0,
+      "parakeet_clin_wer": 14.6,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 1,
+      "parakeet_num_matched": 7,
+      "parakeet_num_mismatch": 0
+    },
+    {
+      "file": "gsm Buardo",
+      "whisper_raw_wer": 25.7,
+      "whisper_clin_wer": 25.8,
+      "whisper_med_matched": 0,
+      "whisper_med_omitted": 0,
+      "whisper_num_matched": 4,
+      "whisper_num_mismatch": 0,
+      "parakeet_raw_wer": 24.6,
+      "parakeet_clin_wer": 24.6,
+      "parakeet_med_matched": 0,
+      "parakeet_med_omitted": 0,
+      "parakeet_num_matched": 4,
+      "parakeet_num_mismatch": 0
+    }
+  ]
+}

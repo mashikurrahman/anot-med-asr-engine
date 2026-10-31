@@ -12,7 +12,7 @@ import numpy as np
 import torch
 from transformers import AutoProcessor, AutoModelForCTC
 
-from app.core.config import settings
+from app.core.config import PROJECT_ROOT, settings
 from app.core.logging import logger
 
 
@@ -33,6 +33,7 @@ class MedASRModel:
             cls._instance._model_id = settings.MODEL_ID
             cls._instance._load_time = 0.0
             cls._instance._is_loaded = False
+            cls._instance._lora_applied = False
         return cls._instance
 
     @classmethod
@@ -61,6 +62,7 @@ class MedASRModel:
             "parameter_count": 105000000,
             "device": self._device,
             "is_loaded": self._is_loaded,
+            "lora_applied": self._lora_applied,
             "load_time_seconds": round(self._load_time, 4)
         }
 
@@ -81,6 +83,25 @@ class MedASRModel:
         # 1. Load processor & model from local cache
         processor = AutoProcessor.from_pretrained(self._model_id, local_files_only=True)
         model = AutoModelForCTC.from_pretrained(self._model_id, local_files_only=True)
+
+        # 1b. Check for and apply promoted MedASR LoRA clinical adapter
+        primary_lora = PROJECT_ROOT / "app" / "models" / "weights" / "medasr_lora_adapter.pt"
+        fallback_lora = PROJECT_ROOT / "benchmark" / "stage25_phase2_pipeline" / "data" / "checkpoints" / "medasr_lora_adapter.pt"
+        lora_adapter_path = primary_lora if primary_lora.exists() else fallback_lora
+        self._lora_applied = False
+        if lora_adapter_path.exists():
+            try:
+                from app.models.lora import inject_lora_adapters, load_lora_checkpoint
+                payload = torch.load(str(lora_adapter_path), map_location="cpu", weights_only=True)
+                meta = payload.get("metadata", {})
+                freeze_early = meta.get("freeze_early_layers", 12) if isinstance(meta, dict) else 12
+                inject_lora_adapters(model, freeze_early_layers=freeze_early)
+                load_lora_checkpoint(model, lora_adapter_path)
+                self._lora_applied = True
+                logger.info(f"Loaded promoted MedASR LoRA clinical adapter ({lora_adapter_path.stat().st_size:,} bytes).")
+            except Exception as e:
+                logger.warning(f"Failed to load LoRA adapter ({e}). Continuing with base model.")
+
         model.eval()
 
         # 2. Configure target hardware device

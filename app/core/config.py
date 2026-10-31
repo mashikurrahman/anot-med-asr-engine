@@ -14,6 +14,27 @@ from pydantic import BaseModel, Field
 PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 
 
+def _load_env_file():
+    """Load key-value pairs from .env if present into os.environ."""
+    env_file = PROJECT_ROOT / ".env"
+    if env_file.exists():
+        try:
+            with open(env_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip("\"'")
+                        if k not in os.environ:
+                            os.environ[k] = v
+        except Exception:
+            pass
+
+
+_load_env_file()
+
+
 class Settings(BaseModel):
     """Production service settings with safe environment-variable overrides."""
 
@@ -85,8 +106,8 @@ class Settings(BaseModel):
     NORMALIZE_DEFAULT: bool = Field(default_factory=lambda: os.getenv("ANOT_ASR_NORMALIZE", "true").lower() == "true")
 
     # Resource Protection Limits
-    MAX_UPLOAD_MB: int = Field(default_factory=lambda: int(os.getenv("ANOT_ASR_MAX_UPLOAD_MB", "100")))
-    MAX_AUDIO_DURATION_SECONDS: float = Field(default_factory=lambda: float(os.getenv("ANOT_ASR_MAX_DURATION_SECONDS", "1800.0")))  # 30 mins
+    MAX_UPLOAD_MB: int = Field(default_factory=lambda: int(os.getenv("ANOT_ASR_MAX_UPLOAD_MB", "500")))
+    MAX_AUDIO_DURATION_SECONDS: float = Field(default_factory=lambda: float(os.getenv("ANOT_ASR_MAX_DURATION_SECONDS", "14400.0")))  # 4 hours
     MAX_CONCURRENT_JOBS: int = Field(default_factory=lambda: int(os.getenv("ANOT_ASR_MAX_CONCURRENT_JOBS", "2")))
 
     @property
