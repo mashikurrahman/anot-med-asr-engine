@@ -22,6 +22,7 @@ import numpy as np
 
 from app.core.config import settings
 from app.core.logging import logger
+from language_model.gap_recovery import filter_recovered, find_gaps
 from language_model.language_spans import build_spans, english_flags, format_marker, join_with_translation_labels
 from language_model.phrase_library import build_hotwords, build_initial_prompt
 
@@ -180,6 +181,8 @@ class WhisperASRModel:
             if detected and len(spans) == 1:
                 self._last_detected_language = detected
             segments.extend(span_segments)
+        if settings.RECOVER_GAPS and lang == "en":
+            segments = self._recover_gaps(waveform, segments, hotwords, initial_prompt)
         low_conf = sum(1 for sg in segments if sg.get("low_confidence") and not sg.get("non_english"))
         self._last_non_english_seconds = non_english_sec
         inference_time = time.perf_counter() - t0
@@ -201,16 +204,42 @@ class WhisperASRModel:
         flags = english_flags(p_en, settings.LANG_EN_THRESHOLD)
         return build_spans(flags, win, waveform.size / 16000.0)
 
-    def _translate_span(self, chunk: np.ndarray, offset: float) -> List[Dict[str, Any]]:
+    def _recover_gaps(self, waveform: np.ndarray, segments: List[Dict[str, Any]],
+                      hotwords: Optional[str], initial_prompt: Optional[str]) -> List[Dict[str, Any]]:
+        """Second pass over loud stretches with no text: a more sensitive speech detector; English is transcribed,
+        other languages are translated. Results are flagged low-confidence and screened for noise inventions."""
+        per_sec = waveform[: (waveform.size // 16000) * 16000].reshape(-1, 16000)
+        level = np.sqrt(np.mean(np.square(per_sec), axis=1))
+        duration = waveform.size / 16000.0
+        found: List[Dict[str, Any]] = []
+        gaps = find_gaps(segments, level, duration, rel=settings.RECOVER_REL_LEVEL)
+        for g_start, g_end in gaps:
+            a, b = max(0.0, g_start - 0.5), min(duration, g_end + 0.5)
+            chunk = waveform[int(a * 16000):int(b * 16000)]
+            try:
+                _l, _p, probs = self._model.detect_language(chunk[: 30 * 16000])
+                is_en = float(dict(probs).get("en", 0.0)) >= settings.LANG_EN_THRESHOLD
+                if is_en:
+                    segs, _d = self._decode(chunk, a, "en", initial_prompt, hotwords, relaxed=True)
+                else:
+                    segs = self._translate_span(chunk, a, relaxed=True)
+            except Exception as exc:  # a failed second pass must never lose the first-pass transcript
+                logger.warning("Gap recovery failed for %.0f-%.0fs: %s", a, b, exc)
+                continue
+            found.extend(filter_recovered(segs))
+        logger.info("Gap recovery: %d stretch(es) rechecked, %d segment(s) added", len(gaps), len(found))
+        return sorted(segments + found, key=lambda sg: sg["start"])
+
+    def _translate_span(self, chunk: np.ndarray, offset: float, relaxed: bool = False) -> List[Dict[str, Any]]:
         """Translate a non-English stretch into English. Source language is auto-detected; each segment is labelled as translated."""
-        segs, detected = self._decode(chunk, offset, None, None, None, task="translate")
+        segs, detected = self._decode(chunk, offset, None, None, None, task="translate", relaxed=relaxed)
         if detected and detected.lower().startswith("en"):  # the stretch turned out to be English: no translation happened, no label
             return segs
         return [{**sg, "translated_from": detected or "unknown"} for sg in segs]
 
     def _decode(self, chunk: np.ndarray, offset: float, fw_language: Optional[str],
                 initial_prompt: Optional[str], hotwords: Optional[str],
-                task: str = "transcribe") -> Tuple[List[Dict[str, Any]], Optional[str]]:
+                task: str = "transcribe", relaxed: bool = False) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Run faster-whisper on one chunk; timestamps are shifted by `offset` seconds."""
         shared = dict(
             language=fw_language,
@@ -223,11 +252,12 @@ class WhisperASRModel:
             log_prob_threshold=settings.WHISPER_LOGPROB_THRESHOLD,
             compression_ratio_threshold=settings.WHISPER_COMPRESSION_RATIO_THRESHOLD,
         )
-        if getattr(self, "_batched", None) is not None:  # several windows decoded at once on the GPU: ~2x faster
+        if getattr(self, "_batched", None) is not None and not relaxed:  # several windows decoded at once on the GPU: ~2x faster
             seg_iter, info = self._batched.transcribe(chunk, batch_size=settings.WHISPER_BATCH_SIZE, **shared)
         else:
             seg_iter, info = self._model.transcribe(
                 chunk, vad_filter=True, condition_on_previous_text=False,  # no runaway repetition on silence
+                **({"vad_parameters": {"threshold": 0.15, "min_speech_duration_ms": 100, "speech_pad_ms": 300}} if relaxed else {}),
                 **shared)
         out: List[Dict[str, Any]] = []
         for s in seg_iter:

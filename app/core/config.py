@@ -95,6 +95,9 @@ class Settings(BaseModel):
     NON_ENGLISH_MARK: bool = Field(default_factory=lambda: os.getenv("ANOT_NON_ENGLISH_MARK", "false").lower() == "true")
     # What to do with a stretch that is not English: "mark" leaves a placeholder, "translate" translates it into English (labelled).
     NON_ENGLISH_MODE: str = Field(default_factory=lambda: os.getenv("ANOT_NON_ENGLISH_MODE", "mark").lower())
+    # Second pass over loud stretches the first pass left untranscribed (quiet / distant / child speech). Off by default.
+    RECOVER_GAPS: bool = Field(default_factory=lambda: os.getenv("ANOT_RECOVER_GAPS", "false").lower() == "true")
+    RECOVER_REL_LEVEL: float = Field(default_factory=lambda: float(os.getenv("ANOT_RECOVER_REL_LEVEL", "0.2")))
     LANG_WINDOW_SEC: float = Field(default_factory=lambda: float(os.getenv("ANOT_LANG_WINDOW_SEC", "15")))
     # Windows shorter than this are not language-checked (too little speech to judge); they inherit the neighbour.
     LANG_MIN_SEC: float = Field(default_factory=lambda: float(os.getenv("ANOT_LANG_MIN_SEC", "8")))
