@@ -96,7 +96,7 @@ image = (
 @app.function(
     image=image,
     gpu="A10G",                    # ~2.5x faster than T4 for ~1.9x the hourly price
-    scaledown_window=600,          # keep warm 10 min after last request, then scale to 0
+    scaledown_window=120,          # keep warm 2 min after last request, then scale to 0 (idle GPU time is billed)
     timeout=60 * 30,              # allow long recordings
     volumes={"/vol": modal.Volume.from_name("asr-ft")},
     secrets=[
