@@ -226,20 +226,30 @@ class WhisperASRModel:
             except Exception as exc:  # a failed second pass must never lose the first-pass transcript
                 logger.warning("Gap recovery failed for %.0f-%.0fs: %s", a, b, exc)
                 continue
-            found.extend(filter_recovered(segs))
+            kept = filter_recovered(segs)
+            if not kept:  # the detector still found nothing in a clearly audible stretch: let Whisper judge it, strictly screened
+                try:
+                    segs = (self._decode(chunk, a, "en", initial_prompt, hotwords, relaxed=True, no_vad=True)[0] if is_en
+                            else self._translate_span(chunk, a, relaxed=True, no_vad=True))
+                    kept = filter_recovered(segs, max_no_speech=0.4, min_logprob=-0.9)
+                except Exception as exc:
+                    logger.warning("Gap recovery (no detector) failed for %.0f-%.0fs: %s", a, b, exc)
+            found.extend(kept)
         logger.info("Gap recovery: %d stretch(es) rechecked, %d segment(s) added", len(gaps), len(found))
         return sorted(segments + found, key=lambda sg: sg["start"])
 
-    def _translate_span(self, chunk: np.ndarray, offset: float, relaxed: bool = False) -> List[Dict[str, Any]]:
+    def _translate_span(self, chunk: np.ndarray, offset: float, relaxed: bool = False,
+                        no_vad: bool = False) -> List[Dict[str, Any]]:
         """Translate a non-English stretch into English. Source language is auto-detected; each segment is labelled as translated."""
-        segs, detected = self._decode(chunk, offset, None, None, None, task="translate", relaxed=relaxed)
+        segs, detected = self._decode(chunk, offset, None, None, None, task="translate", relaxed=relaxed, no_vad=no_vad)
         if detected and detected.lower().startswith("en"):  # the stretch turned out to be English: no translation happened, no label
             return segs
         return [{**sg, "translated_from": detected or "unknown"} for sg in segs]
 
     def _decode(self, chunk: np.ndarray, offset: float, fw_language: Optional[str],
                 initial_prompt: Optional[str], hotwords: Optional[str],
-                task: str = "transcribe", relaxed: bool = False) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+                task: str = "transcribe", relaxed: bool = False,
+                no_vad: bool = False) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Run faster-whisper on one chunk; timestamps are shifted by `offset` seconds."""
         shared = dict(
             language=fw_language,
@@ -256,8 +266,8 @@ class WhisperASRModel:
             seg_iter, info = self._batched.transcribe(chunk, batch_size=settings.WHISPER_BATCH_SIZE, **shared)
         else:
             seg_iter, info = self._model.transcribe(
-                chunk, vad_filter=True, condition_on_previous_text=False,  # no runaway repetition on silence
-                **({"vad_parameters": {"threshold": 0.15, "min_speech_duration_ms": 100, "speech_pad_ms": 300}} if relaxed else {}),
+                chunk, vad_filter=not no_vad, condition_on_previous_text=False,  # no runaway repetition on silence
+                **({"vad_parameters": {"threshold": 0.15, "min_speech_duration_ms": 100, "speech_pad_ms": 300}} if relaxed and not no_vad else {}),
                 **shared)
         out: List[Dict[str, Any]] = []
         for s in seg_iter:
@@ -279,7 +289,10 @@ class WhisperASRModel:
                               for w in s.words]}
                    if settings.WHISPER_WORD_TIMESTAMPS and getattr(s, "words", None) else {}),
             })
-        return out, getattr(info, "language", None)
+        language = getattr(info, "language", None)
+        if getattr(info, "language_probability", 1.0) < 0.7:  # short or noisy audio: a guessed language name would mislead
+            language = None
+        return out, language
 
     def unload(self) -> None:
         self._model = None
