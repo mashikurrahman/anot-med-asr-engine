@@ -204,6 +204,8 @@ class WhisperASRModel:
     def _translate_span(self, chunk: np.ndarray, offset: float) -> List[Dict[str, Any]]:
         """Translate a non-English stretch into English. Source language is auto-detected; each segment is labelled as translated."""
         segs, detected = self._decode(chunk, offset, None, None, None, task="translate")
+        if detected and detected.lower().startswith("en"):  # the stretch turned out to be English: no translation happened, no label
+            return segs
         return [{**sg, "translated_from": detected or "unknown"} for sg in segs]
 
     def _decode(self, chunk: np.ndarray, offset: float, fw_language: Optional[str],
