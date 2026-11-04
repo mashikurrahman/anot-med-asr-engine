@@ -22,7 +22,7 @@ import numpy as np
 
 from app.core.config import settings
 from app.core.logging import logger
-from language_model.language_spans import build_spans, english_flags, format_marker
+from language_model.language_spans import build_spans, english_flags, format_marker, join_with_translation_labels
 from language_model.phrase_library import build_hotwords, build_initial_prompt
 
 
@@ -162,6 +162,11 @@ class WhisperASRModel:
         self._last_detected_language = fw_language or lang
         non_english_sec = 0.0
         for span_start, span_end, is_english in spans:
+            if not is_english and settings.NON_ENGLISH_MODE == "translate":
+                non_english_sec += span_end - span_start
+                chunk = waveform[int(span_start * 16000):int(span_end * 16000)]
+                segments.extend(self._translate_span(chunk, span_start))
+                continue
             if not is_english:
                 non_english_sec += span_end - span_start
                 segments.append({
@@ -179,7 +184,7 @@ class WhisperASRModel:
         self._last_non_english_seconds = non_english_sec
         inference_time = time.perf_counter() - t0
         self._last_low_confidence_count = low_conf
-        return " ".join(sg["text"] for sg in segments).strip(), segments, inference_time
+        return join_with_translation_labels(segments), segments, inference_time
 
     def _plan_spans(self, waveform: np.ndarray) -> List[Tuple[float, float, bool]]:
         """Split the recording into English / non-English spans from per-window language detection."""
@@ -196,11 +201,18 @@ class WhisperASRModel:
         flags = english_flags(p_en, settings.LANG_EN_THRESHOLD)
         return build_spans(flags, win, waveform.size / 16000.0)
 
+    def _translate_span(self, chunk: np.ndarray, offset: float) -> List[Dict[str, Any]]:
+        """Translate a non-English stretch into English. Source language is auto-detected; each segment is labelled as translated."""
+        segs, detected = self._decode(chunk, offset, None, None, None, task="translate")
+        return [{**sg, "translated_from": detected or "unknown"} for sg in segs]
+
     def _decode(self, chunk: np.ndarray, offset: float, fw_language: Optional[str],
-                initial_prompt: Optional[str], hotwords: Optional[str]) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+                initial_prompt: Optional[str], hotwords: Optional[str],
+                task: str = "transcribe") -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Run faster-whisper on one chunk; timestamps are shifted by `offset` seconds."""
         shared = dict(
             language=fw_language,
+            task=task,
             beam_size=settings.WHISPER_BEAM_SIZE,
             word_timestamps=settings.WHISPER_WORD_TIMESTAMPS,
             initial_prompt=initial_prompt,

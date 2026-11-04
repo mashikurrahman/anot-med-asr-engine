@@ -11,6 +11,8 @@ speaker with the largest overlap. Pure functions: inputs are never modified.
 import re
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
+from language_model.language_spans import translation_label
+
 Turn = Tuple[float, float, str]
 Segment = Dict[str, Any]
 
@@ -107,6 +109,7 @@ def render_transcript(segments: Sequence[Segment], transform: Optional[Callable[
     lines: List[str] = []
     current: Optional[str] = None
     texts: List[str] = []
+    in_translation = False
 
     def flush() -> None:
         nonlocal texts
@@ -125,11 +128,17 @@ def render_transcript(segments: Sequence[Segment], transform: Optional[Callable[
         if seg.get("non_english") or not speaker:  # markers / unlabelled text stand alone
             flush()
             current = None
+            in_translation = False
             lines.append(text)
             continue
         if speaker != current:
             flush()
             current = speaker
+            in_translation = False
+        source = seg.get("translated_from")
+        if source and not in_translation:  # label where translated text begins, so it is never read as verbatim speech
+            texts.append(translation_label(None if source == "unknown" else source))
+        in_translation = bool(source)
         texts.append(text)
     flush()
     return "\n".join(lines)

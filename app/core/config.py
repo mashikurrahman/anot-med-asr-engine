@@ -93,6 +93,8 @@ class Settings(BaseModel):
     # Replace non-English stretches (English-only engine) with a "[Non-English speech, m:ss-m:ss]"
     # marker instead of letting the decoder invent English for them. English-language runs only.
     NON_ENGLISH_MARK: bool = Field(default_factory=lambda: os.getenv("ANOT_NON_ENGLISH_MARK", "false").lower() == "true")
+    # What to do with a stretch that is not English: "mark" leaves a placeholder, "translate" translates it into English (labelled).
+    NON_ENGLISH_MODE: str = Field(default_factory=lambda: os.getenv("ANOT_NON_ENGLISH_MODE", "mark").lower())
     LANG_WINDOW_SEC: float = Field(default_factory=lambda: float(os.getenv("ANOT_LANG_WINDOW_SEC", "15")))
     # Windows shorter than this are not language-checked (too little speech to judge); they inherit the neighbour.
     LANG_MIN_SEC: float = Field(default_factory=lambda: float(os.getenv("ANOT_LANG_MIN_SEC", "8")))

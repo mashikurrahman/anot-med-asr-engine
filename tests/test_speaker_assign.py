@@ -99,6 +99,14 @@ class TestRender(unittest.TestCase):
         self.assertEqual(render_transcript(segs, transform=lambda t: t.replace("Um", "")),
                          "Speaker 1: Hello.\nSpeaker 1: Bye.")
 
+    def test_translated_text_is_labelled_and_keeps_its_speaker(self):
+        segs = [{"text": "Hello.", "speaker": "Speaker 1"},
+                {"text": "It hurts here.", "speaker": "Speaker 2", "translated_from": "es"},
+                {"text": "Since when?", "speaker": "Speaker 2", "translated_from": "es"},
+                {"text": "Okay.", "speaker": "Speaker 1"}]
+        self.assertEqual(render_transcript(segs),
+                         "Speaker 1: Hello.\nSpeaker 2: [Translated from Spanish] It hurts here. Since when?\nSpeaker 1: Okay.")
+
     def test_empty(self):
         self.assertEqual(render_transcript([]), "")
 

@@ -69,6 +69,7 @@ image = (
         "ANOT_WHISPER_BATCHED": "true",
         "ANOT_TERM_CORRECTION": "true",
         "ANOT_NON_ENGLISH_MARK": "true",
+        "ANOT_NON_ENGLISH_MODE": "translate",
         "ANOT_STRIP_FILLERS": "true",
         "ANOT_DICTATION_COMMANDS": "true",
         "ANOT_WHISPER_WORD_TIMESTAMPS": "true",

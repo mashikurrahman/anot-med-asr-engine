@@ -58,3 +58,31 @@ def _clock(sec: float) -> str:
 def format_marker(start: float, end: float) -> str:
     """Placeholder text for a stretch of non-English speech."""
     return f"[Non-English speech, {_clock(start)}-{_clock(end)}]"
+
+
+_LANGUAGE_NAMES = {
+    "es": "Spanish", "bn": "Bengali", "hi": "Hindi", "ar": "Arabic", "zh": "Chinese", "fr": "French",
+    "pt": "Portuguese", "ru": "Russian", "vi": "Vietnamese", "ur": "Urdu", "ko": "Korean", "ja": "Japanese",
+    "de": "German", "it": "Italian", "tl": "Tagalog", "ht": "Haitian Creole", "pl": "Polish", "fa": "Persian",
+    "ta": "Tamil", "te": "Telugu", "gu": "Gujarati", "pa": "Punjabi", "tr": "Turkish", "uk": "Ukrainian",
+}
+
+
+def translation_label(language_code: Optional[str]) -> str:
+    """Tag placed before text that was translated into English, so a reader knows it is not a verbatim transcript."""
+    if not language_code:
+        return "[Translated from another language]"
+    return f"[Translated from {_LANGUAGE_NAMES.get(language_code, language_code)}]"
+
+
+def join_with_translation_labels(segments: List[dict]) -> str:
+    """Join segment texts; a translation label is put where each run of translated text begins."""
+    parts: List[str] = []
+    in_translation = False
+    for sg in segments:
+        source = sg.get("translated_from")
+        if source and not in_translation:
+            parts.append(translation_label(None if source == "unknown" else source))
+        in_translation = bool(source)
+        parts.append(sg["text"])
+    return " ".join(parts).strip()

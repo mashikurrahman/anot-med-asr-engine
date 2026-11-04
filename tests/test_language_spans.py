@@ -40,5 +40,33 @@ class TestMarker(unittest.TestCase):
         self.assertEqual(format_marker(3590, 3725), "[Non-English speech, 59:50-1:02:05]")
 
 
+
+class TestTranslationLabel(unittest.TestCase):
+    def test_known_language_is_named(self):
+        from language_model.language_spans import translation_label
+        self.assertEqual(translation_label("es"), "[Translated from Spanish]")
+
+    def test_unknown_code_is_shown_as_is(self):
+        from language_model.language_spans import translation_label
+        self.assertEqual(translation_label("xx"), "[Translated from xx]")
+
+    def test_missing_language_is_still_labelled(self):
+        from language_model.language_spans import translation_label
+        self.assertEqual(translation_label(None), "[Translated from another language]")
+
+
+class TestJoinWithLabels(unittest.TestCase):
+    def test_label_marks_start_of_each_translated_run(self):
+        from language_model.language_spans import join_with_translation_labels
+        segs = [{"text": "Hello."}, {"text": "Take it twice.", "translated_from": "es"},
+                {"text": "Every day.", "translated_from": "es"}, {"text": "Okay."}]
+        self.assertEqual(join_with_translation_labels(segs),
+                         "Hello. [Translated from Spanish] Take it twice. Every day. Okay.")
+
+    def test_no_translation_is_a_plain_join(self):
+        from language_model.language_spans import join_with_translation_labels
+        self.assertEqual(join_with_translation_labels([{"text": "a"}, {"text": "b"}]), "a b")
+
+
 if __name__ == "__main__":
     unittest.main()
