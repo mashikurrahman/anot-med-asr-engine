@@ -218,7 +218,8 @@ class WhisperASRModel:
             chunk = waveform[int(a * 16000):int(b * 16000)]
             try:
                 _l, _p, probs = self._model.detect_language(chunk[: 30 * 16000])
-                is_en = float(dict(probs).get("en", 0.0)) >= settings.LANG_EN_THRESHOLD
+                top_lang, top_p = max(probs, key=lambda lp: lp[1])
+                is_en = top_lang == "en" or top_p < 0.6  # quiet clips get an unreliable language guess: stay with English
                 if is_en:
                     segs, _d = self._decode(chunk, a, "en", initial_prompt, hotwords, relaxed=True)
                 else:
@@ -231,7 +232,7 @@ class WhisperASRModel:
                 try:
                     segs = (self._decode(chunk, a, "en", initial_prompt, hotwords, relaxed=True, no_vad=True)[0] if is_en
                             else self._translate_span(chunk, a, relaxed=True, no_vad=True))
-                    kept = filter_recovered(segs, max_no_speech=0.4, min_logprob=-0.9)
+                    kept = filter_recovered(segs, max_no_speech=0.6, min_logprob=-1.0)
                 except Exception as exc:
                     logger.warning("Gap recovery (no detector) failed for %.0f-%.0fs: %s", a, b, exc)
             found.extend(kept)

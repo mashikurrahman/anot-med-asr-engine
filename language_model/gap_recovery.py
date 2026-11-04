@@ -14,6 +14,10 @@ import numpy as np
 
 Gap = Tuple[float, float]
 
+# Phrases Whisper invents on noise (they come from its training on online video).
+_NOISE_PHRASES = ("thanks for watching", "thank you for watching", "subscribe", "video description",
+                  "see you in the next", "like and share")
+
 
 def find_gaps(segments: Sequence[Dict[str, Any]], level: Sequence[float], duration: float,
               rel: float = 0.2, min_len: float = 5.0, close_hole: int = 3) -> List[Gap]:
@@ -65,7 +69,7 @@ def filter_recovered(segments: Sequence[Dict[str, Any]], max_no_speech: float = 
         text = (s.get("text") or "").strip()
         key = text.lower()
         no_speech, logprob = s.get("no_speech_prob"), s.get("avg_logprob")
-        if not text or key in seen:
+        if not text or key in seen or any(p in key for p in _NOISE_PHRASES):
             continue
         if no_speech is not None and no_speech > max_no_speech:
             continue

@@ -49,6 +49,11 @@ class TestFilterRecovered(unittest.TestCase):
         ]
         self.assertEqual([s["text"] for s in filter_recovered(segs)], ["Open your mouth."])
 
+    def test_known_noise_phrases_are_dropped(self):
+        segs = [{"text": "Thank you for watching!", "no_speech_prob": 0.1, "avg_logprob": -0.3},
+                {"text": "Don't forget to subscribe.", "no_speech_prob": 0.1, "avg_logprob": -0.3}]
+        self.assertEqual(filter_recovered(segs), [])
+
     def test_kept_segments_are_flagged_recovered_and_low_confidence(self):
         out = filter_recovered([{"text": "Come here.", "no_speech_prob": 0.1, "avg_logprob": -0.5}])
         self.assertTrue(out[0]["recovered"] and out[0]["low_confidence"])
