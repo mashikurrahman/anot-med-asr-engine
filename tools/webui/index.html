@@ -63,7 +63,7 @@
     <div class="card">
       <h2>Connection</h2>
       <label>Service URL</label>
-      <input id="url" placeholder="https://your-service.up.railway.app" />
+      <input id="url" placeholder="https://mashikurrahman--anot-asr-gpu-fastapi-app.us-east.modal.run" />
       <label>API key (X-API-Key)</label>
       <input id="key" type="password" placeholder="ANOT_ASR_API_KEY" />
       <div class="row">
@@ -117,7 +117,7 @@ const LS = { url:'anot_url', key:'anot_key', mode:'anot_mode', engine:'anot_engi
 
 // Restore settings
 try {
-  $('url').value = localStorage.getItem(LS.url) || 'https://anot-med-asr-engine-production.up.railway.app';
+  $('url').value = localStorage.getItem(LS.url) || 'https://mashikurrahman--anot-asr-gpu-fastapi-app.us-east.modal.run';
   $('key').value = localStorage.getItem(LS.key) || '';
   if (localStorage.getItem(LS.mode)) $('mode').value = localStorage.getItem(LS.mode);
   if (localStorage.getItem(LS.engine)) $('engine').value = localStorage.getItem(LS.engine);
