@@ -173,6 +173,8 @@ class Settings(BaseModel):
 
     # Security & Auth boundary. Set ANOT_ASR_API_KEY to require an X-API-Key
     # header on transcription endpoints (strongly recommended in any deployment).
+    # Extra keys for outside clients: "name:key[:daily_limit], name2:key2:50". Each can be revoked and limited on its own.
+    CLIENT_KEYS: str = Field(default_factory=lambda: os.getenv("ANOT_ASR_CLIENT_KEYS", ""))
     API_KEY: Optional[str] = Field(default_factory=lambda: os.getenv("ANOT_ASR_API_KEY", None))
 
     # Allowed CORS origins (comma-separated), e.g. "https://app.example.com".

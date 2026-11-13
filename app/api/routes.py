@@ -18,7 +18,7 @@ from app.api.schemas import (
     TranscribeResponse
 )
 from app.core.config import settings
-from app.security.privacy import generate_request_id, verify_auth_boundary
+from app.security.privacy import enforce_daily_limit, generate_request_id, verify_auth_boundary
 from app.services.asr_service import ASRService
 from app.services.deepgram_words import build_words, overall_confidence
 from app.services.soap_service import SoapGenerationError, SoapService
@@ -76,7 +76,7 @@ async def readiness_check() -> ReadyResponse:
         500: {"model": ErrorResponse, "description": "Internal transcription failure"},
         503: {"model": ErrorResponse, "description": "Service not ready"}
     },
-    dependencies=[Depends(verify_auth_boundary)],
+    dependencies=[Depends(verify_auth_boundary), Depends(enforce_daily_limit)],
     summary="Transcribe Clinical Audio",
     description="Transcribe uploaded clinical audio via MedASR (supports Mode A dictation and Mode B conversation)."
 )
@@ -187,7 +187,7 @@ async def generate_soap(body: SoapRequest) -> SoapNote:
 @router.post(
     "/api/v1/transcribe/conversation",
     response_model=TranscribeResponse,
-    dependencies=[Depends(verify_auth_boundary)],
+    dependencies=[Depends(verify_auth_boundary), Depends(enforce_daily_limit)],
     summary="Transcribe Doctor–Patient Ambient Conversation",
     description="Convenience endpoint for Mode B ambient multi-speaker clinical encounters with VAD segmentation."
 )
@@ -216,7 +216,7 @@ async def transcribe_conversation(
 
 @router.post(
     "/v1/listen",
-    dependencies=[Depends(verify_auth_boundary)],
+    dependencies=[Depends(verify_auth_boundary), Depends(enforce_daily_limit)],
     summary="Deepgram Nova-3 Drop-In Compatibility Endpoint",
     description="Accepts raw audio or multipart forms and returns Deepgram-format JSON to migrate existing web apps with 0 client changes."
 )

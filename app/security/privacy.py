@@ -12,10 +12,11 @@ import pathlib
 import uuid
 from datetime import datetime, timezone
 from typing import Optional
-from fastapi import HTTPException, Security, status
+from fastapi import HTTPException, Request, Security, status
 from fastapi.security import APIKeyHeader
 
 from app.core.config import settings
+from app.security.client_keys import DailyUsage, SharedDailyUsage, parse_client_keys
 
 # Authentication header boundary
 API_KEY_HEADER = APIKeyHeader(name="X-API-Key", auto_error=False)
@@ -53,21 +54,52 @@ def sanitize_filename(original_filename: Optional[str]) -> str:
     return f"upload_{name_hash}_{uuid.uuid4().hex[:6]}{ext}"
 
 
+# Request counter for client keys with a daily limit. Shared across Modal containers when ANOT_USAGE_BACKEND=modal.
+_usage = SharedDailyUsage() if os.getenv("ANOT_USAGE_BACKEND", "").lower() == "modal" else DailyUsage()
+
+
+def _matches(presented: str, expected: str) -> bool:
+    return hmac.compare_digest(presented.encode(), expected.encode())
+
+
 async def verify_auth_boundary(
+    request: Request = None,
     api_key: Optional[str] = Security(API_KEY_HEADER),
     authorization: Optional[str] = Security(AUTHORIZATION_HEADER),
 ) -> None:
     """
     Security boundary dependency for FastAPI endpoints.
-    In development / private deployment (settings.API_KEY is None), all requests are allowed.
-    In authenticated environments, validates the X-API-Key header or a
-    Deepgram-style "Authorization: Token <key>" header.
+    In development / private deployment (no key configured), all requests are allowed.
+    Otherwise the X-API-Key header (or a Deepgram-style "Authorization: Token <key>") must be the main key
+    (settings.API_KEY, unlimited) or one of the per-client keys (settings.CLIENT_KEYS, each with an optional daily limit).
+    The matched client is recorded on request.state for the usage limit.
     """
-    expected_key = settings.API_KEY
-    if expected_key is not None:
-        presented = api_key or _key_from_authorization(authorization)
-        if not presented or not hmac.compare_digest(presented.encode(), expected_key.encode()):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Unauthorized: invalid or missing API key."
-            )
+    master = settings.API_KEY
+    clients = parse_client_keys(getattr(settings, "CLIENT_KEYS", "") or "")
+    if master is None and not clients:
+        return
+    presented = api_key or _key_from_authorization(authorization)
+    if presented:
+        match = ("master", None) if master is not None and _matches(presented, master) else None
+        for client_key, (name, limit) in clients.items():
+            if match is None and _matches(presented, client_key):
+                match = (name, limit)
+        if match is not None:
+            if request is not None:
+                request.state.client_name, request.state.client_limit = match
+            return
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Unauthorized: invalid or missing API key."
+    )
+
+
+async def enforce_daily_limit(request: Request) -> None:
+    """For endpoints that process audio: one request counts against the client's daily limit; over it is a 429."""
+    name = getattr(request.state, "client_name", None)
+    limit = getattr(request.state, "client_limit", None)
+    if name and not _usage.allow(name, limit):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Daily request limit reached for this key. It resets at 00:00 UTC."
+        )
