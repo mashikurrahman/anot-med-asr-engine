@@ -103,7 +103,7 @@ class SoapService:
 
     @staticmethod
     def is_configured() -> bool:
-        return bool(settings.ANTHROPIC_API_KEY)
+        return bool(settings.ANTHROPIC_API_KEY) and bool(settings.SOAP_ENABLED)
 
     def _get_client(self) -> anthropic.AsyncAnthropic:
         if self._client is None:

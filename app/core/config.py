@@ -104,6 +104,8 @@ class Settings(BaseModel):
     LANG_EN_THRESHOLD: float = Field(default_factory=lambda: float(os.getenv("ANOT_LANG_EN_THRESHOLD", "0.4")))
     # SOAP note generation (Anthropic API). Disabled until ANTHROPIC_API_KEY is set. Transcripts are PHI:
     # use an Anthropic account covered by a BAA (and zero data retention if your policy requires it).
+    # Transcription-only deployments leave this off: nobody can trigger note generation (or send a transcript to Anthropic).
+    SOAP_ENABLED: bool = Field(default_factory=lambda: os.getenv("ANOT_SOAP_ENABLED", "false").lower() == "true")
     ANTHROPIC_API_KEY: str = Field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
     SOAP_MODEL: str = Field(default_factory=lambda: os.getenv("ANOT_SOAP_MODEL", "claude-haiku-5-5"))
     SOAP_MAX_TOKENS: int = Field(default_factory=lambda: int(os.getenv("ANOT_SOAP_MAX_TOKENS", "16000")))

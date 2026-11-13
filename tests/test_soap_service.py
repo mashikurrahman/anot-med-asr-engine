@@ -99,6 +99,21 @@ class TestGenerate(unittest.TestCase):
                 _run(SoapService().generate("hello"))
             self.assertEqual(cm.exception.status_code, 503)
 
+    def test_switched_off_even_with_a_key(self):
+        with patch("app.services.soap_service.settings") as s:
+            s.ANTHROPIC_API_KEY = "sk-ant-test"
+            s.SOAP_ENABLED = False
+            self.assertFalse(SoapService.is_configured())
+            with self.assertRaises(SoapGenerationError) as cm:
+                _run(SoapService().generate("hello"))
+            self.assertEqual(cm.exception.status_code, 503)
+
+    def test_on_when_key_and_switch_are_set(self):
+        with patch("app.services.soap_service.settings") as s:
+            s.ANTHROPIC_API_KEY = "sk-ant-test"
+            s.SOAP_ENABLED = True
+            self.assertTrue(SoapService.is_configured())
+
     def test_effort_only_for_5x_models(self):
         self.assertEqual(build_output_config("claude-haiku-5-5", "medium")["effort"], "medium")
         self.assertEqual(build_output_config("claude-sonnet-5-5", "low")["effort"], "low")
