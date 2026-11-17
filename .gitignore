@@ -124,3 +124,7 @@ tests/test_real_benchmark.py
 # Fine-tuning working data (PHI-derived clips + transcripts)
 scratch_ft_data/
 scratch_words.json
+
+# Patient-derived training clips and manifests (never commit)
+scratch_ft_data_t2/
+scratch_manifest_v2.jsonl
