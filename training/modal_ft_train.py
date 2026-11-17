@@ -36,7 +36,7 @@ HP = dict(epochs=6, lr=3e-4, batch=4, accum=4, rank=16, alpha=32, dropout=0.05)
 
 @app.function(image=image, gpu=["A10G", "L4"], volumes={"/vol": vol}, timeout=3 * 3600)
 def train(name: str = "ft2", use_synth: bool = True, real_repeat: int = 3,
-          epochs: int = 4, synth_limit: int = 0) -> dict:
+          epochs: int = 4, synth_limit: int = 0, manifest: str = "manifest.jsonl") -> dict:
     import dataclasses
     from typing import Any, Dict, List
 
@@ -53,7 +53,7 @@ def train(name: str = "ft2", use_synth: bool = True, real_repeat: int = 3,
     tok.set_prefix_tokens(language="english", task="transcribe", predict_timestamps=False)
 
     hp = {**HP, "epochs": epochs}
-    rows = [json.loads(line) for line in open("/vol/data/manifest.jsonl", encoding="utf-8")]
+    rows = [json.loads(line) for line in open(f"/vol/data/{manifest}", encoding="utf-8")]
     train_rows = [r for r in rows if r["split"] == "train"] * real_repeat
     if use_synth:
         synth = [json.loads(line) for line in open("/vol/data/manifest_synth.jsonl", encoding="utf-8")]
@@ -169,5 +169,5 @@ def train(name: str = "ft2", use_synth: bool = True, real_repeat: int = 3,
 
 @app.local_entrypoint()
 def main(name: str = "ft2", use_synth: bool = True, real_repeat: int = 3,
-         epochs: int = 4, synth_limit: int = 0):
-    print(json.dumps(train.remote(name, use_synth, real_repeat, epochs, synth_limit), indent=2))
+         epochs: int = 4, synth_limit: int = 0, manifest: str = "manifest.jsonl"):
+    print(json.dumps(train.remote(name, use_synth, real_repeat, epochs, synth_limit, manifest), indent=2))
