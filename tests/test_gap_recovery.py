@@ -59,5 +59,28 @@ class TestFilterRecovered(unittest.TestCase):
         self.assertTrue(out[0]["recovered"] and out[0]["low_confidence"])
 
 
+class TestKeepRecovered(unittest.TestCase):
+    def test_keeps_confident_lines_from_main_speakers_only(self):
+        from language_model.gap_recovery import keep_recovered
+        segs = [
+            {"start": 0, "end": 60, "text": "doctor talks", "speaker": "Speaker 1"},
+            {"start": 60, "end": 100, "text": "patient talks", "speaker": "Speaker 2"},
+            {"start": 100, "end": 102, "text": "side chat", "speaker": "Speaker 3"},
+            {"start": 110, "end": 112, "text": "quiet patient", "speaker": "Speaker 2", "recovered": True, "avg_logprob": -0.4},
+            {"start": 120, "end": 122, "text": "unsure words", "speaker": "Speaker 2", "recovered": True, "avg_logprob": -0.9},
+            {"start": 130, "end": 132, "text": "background voice", "speaker": "Speaker 3", "recovered": True, "avg_logprob": -0.2},
+            {"start": 140, "end": 142, "text": "new voice", "speaker": "Speaker 4", "recovered": True, "avg_logprob": -0.2},
+        ]
+        self.assertEqual([s["text"] for s in keep_recovered(segs)],
+                         ["doctor talks", "patient talks", "side chat", "quiet patient"])
+
+    def test_without_speaker_labels_only_confidence_counts(self):
+        from language_model.gap_recovery import keep_recovered
+        segs = [{"start": 0, "end": 10, "text": "a"},
+                {"start": 20, "end": 22, "text": "b", "recovered": True, "avg_logprob": -0.3},
+                {"start": 30, "end": 32, "text": "c", "recovered": True, "avg_logprob": -1.1}]
+        self.assertEqual([s["text"] for s in keep_recovered(segs)], ["a", "b"])
+
+
 if __name__ == "__main__":
     unittest.main()

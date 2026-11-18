@@ -25,6 +25,8 @@ from app.services.diarization_service import DiarizationError, Diarizer
 from app.services.normalization_service import NormalizationService
 from app.services.speaker_assign import assign_speakers, render_transcript
 from audio.enhancement import enhance_waveform
+from language_model.gap_recovery import keep_recovered
+from language_model.language_spans import join_with_translation_labels
 from language_model.term_corrector import correct_terms
 from language_model.transcript_cleanup import apply_dictation_commands, strip_fillers
 
@@ -107,6 +109,10 @@ class WhisperPipeline:
         raw_text, raw_segments, inference_time = self.model.transcribe(
             proc_wave, sample_rate, language=language)
         raw_segments = assign_speakers(raw_segments, self._collect_turns(diarization))
+        if any(sg.get("recovered") for sg in raw_segments):
+            # Second-pass lines: keep only confident ones from the visit's main speakers (drops background voices).
+            raw_segments = keep_recovered(raw_segments)
+            raw_text = join_with_translation_labels(raw_segments)
         speakers_on = any(sg.get("speaker") for sg in raw_segments)
         detected_language = getattr(self.model, "_last_detected_language", language or "en")
 

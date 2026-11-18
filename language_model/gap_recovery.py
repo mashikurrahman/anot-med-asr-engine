@@ -78,3 +78,24 @@ def filter_recovered(segments: Sequence[Dict[str, Any]], max_no_speech: float = 
         seen.add(key)
         kept.append({**s, "recovered": True, "low_confidence": True})
     return kept
+
+
+def keep_recovered(segments: Sequence[Dict[str, Any]], min_share: float = 0.2,
+                   min_logprob: float = -0.7) -> List[Dict[str, Any]]:
+    """After speaker labelling: keep a recovered line only if it is confident and comes from one of the visit's
+    main speakers (at least `min_share` of first-pass talk time). Background voices in a busy room are minor
+    speakers, and clinical transcripts leave them out. First-pass lines are always kept."""
+    talk: Dict[Any, float] = {}
+    for s in segments:
+        if not s.get("recovered"):
+            talk[s.get("speaker")] = talk.get(s.get("speaker"), 0.0) + float(s["end"]) - float(s["start"])
+    total = sum(talk.values()) or 1.0
+    kept: List[Dict[str, Any]] = []
+    for s in segments:
+        if s.get("recovered"):
+            share = talk.get(s.get("speaker"), 0.0) / total
+            logprob = s.get("avg_logprob")
+            if share < min_share or logprob is None or logprob < min_logprob:
+                continue
+        kept.append(s)
+    return kept
