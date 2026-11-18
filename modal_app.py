@@ -70,7 +70,7 @@ image = (
         "ANOT_TERM_CORRECTION": "true",
         "ANOT_NON_ENGLISH_MARK": "true",
         "ANOT_NON_ENGLISH_MODE": "translate",
-        "ANOT_RECOVER_GAPS": "true",
+        "ANOT_RECOVER_GAPS": "false",  # off: measured most accurate against verbatim transcripts (22 recordings)
         "ANOT_USAGE_BACKEND": "modal",  # per-client daily limits shared across containers
         "ANOT_STRIP_FILLERS": "true",
         "ANOT_DICTATION_COMMANDS": "true",
